@@ -4,14 +4,19 @@ import re
 from django.conf import settings
 from django.utils.translation import gettext as _
 
+from djangobile.wurfl import devices
+from djangobile.pywurfl.algorithms import Tokenizer
+
 
 class UserAgentPatternException(Exception):
     pass
 
 
 def get_device_family(user_agent):
-    user_agents_ignore_case = hasattr(settings, 'MOBILE_USER_AGENTS_IGNORE_CASE') and settings.MOBILE_USER_AGENTS_IGNORE_CASE
-    
+    device = devices.select_ua(user_agent, filter_noise=True, search=Tokenizer())
+    return device.fall_back
+
+    user_agents_ignore_case = hasattr(settings, 'MOBILE_USER_AGENTS_IGNORE_CASE') and settings.MOBILE_USER_AGENTS_IGNORE_CASE    
     if hasattr(settings, 'MOBILE_USER_AGENTS_PATTERNS') and isinstance(settings.MOBILE_USER_AGENTS_PATTERNS, (list, tuple)):
         for user_agent_pattern in settings.MOBILE_USER_AGENTS_PATTERNS:
             if isinstance(user_agent_pattern, (list, tuple)) and len(user_agent_pattern) == 2:
