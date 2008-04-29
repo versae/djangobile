@@ -12,7 +12,7 @@ class UserAgentPatternException(Exception):
     pass
 
 
-def get_device_family(user_agent):
+def get_fall_back(user_agent):
     device = devices.select_ua(user_agent, filter_noise=True, search=Tokenizer())
     return device.fall_back
 
@@ -21,15 +21,15 @@ def get_device_family(user_agent):
         for user_agent_pattern in settings.MOBILE_USER_AGENTS_PATTERNS:
             if isinstance(user_agent_pattern, (list, tuple)) and len(user_agent_pattern) == 2:
                 pattern = user_agent_pattern[0]
-                device_family = user_agent_pattern[1]
+                fall_back = user_agent_pattern[1]
                 if not user_agents_ignore_case:
                     if re.compile(pattern).match(user_agent):
-                        return device_family
+                        return fall_back
                     else:
                         continue
                 else:
                     if re.compile(pattern, re.I).match(user_agent.lower()):
-                        return device_family
+                        return fall_back
                     else:
                         continue
             else:

@@ -14,6 +14,8 @@ from djangobile.shortcuts import render_to_response
 def index(request):
     profile = {'getNick': 'djangobile',
                 'getFirstName': 'Django Mobile Middleware'}
+    l = [1, 2 ,3]
     return render_to_response('test.xml',
-                            {'profile': profile},
+                            {'profile': profile,
+                            'list': l},
                             context_instance = RequestContext(request))
