@@ -12,7 +12,6 @@ class DjangoMobileMiddleware(object):
             return response
         else:
             content = response.content
-            print content
             index = content.upper().find('</BODY>')
             if index == -1:
                 return response
@@ -21,9 +20,6 @@ class DjangoMobileMiddleware(object):
                 return response
 
     def process_view(self, request, view_func, view_args, view_kwargs):
-        print view_func
-        print view_args
-        print view_kwargs
         return None
 
     def process_request(self, request):

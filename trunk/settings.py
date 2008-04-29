@@ -71,12 +71,20 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.load_template_source',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'djangobile.context_processors.mobile',
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
-    'djangobile.middleware.DjangoMobileMiddleware',
+#    'djangobile.middleware.DjangoMobileMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -97,4 +105,9 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 CACHE_DEF_EXPIRE = 60 * 60 * 24
 
-MOBILE_IGNORE_ADMIN = True
+#MOBILE_IGNORE_ADMIN = True
+MOBILE_USER_AGENTS_IGNORE_CASE = True
+MOBILE_USER_AGENTS_PATTERNS = (
+    ('(.*)(firefox)(.*)', 'firefox'),
+    ('(.*)(opera)(.*)', 'opera'),
+)

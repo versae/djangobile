@@ -8,7 +8,8 @@ from django.http import HttpResponseRedirect
 from django.utils.translation import gettext as _
 from django.conf import settings
 
-from diangobile.shortcuts import render_to_response
+from djangobile.shortcuts import render_to_response
+
 
 def index(request):
     profile = {'getNick': 'djangobile',
