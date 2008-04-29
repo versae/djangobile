@@ -7,7 +7,9 @@
   <mymw:body>
 	  <mymw:include content="Includes/generic/head/person_menu"/>
 	  <mymw:p id="principal" layout="vertical" align="left">
-		
+		{% for l in list %}
+        <mymw:label>Nick: {{ l }}</mymw:label>
+        {% endfor %}
 		<mymw:label>Nick: </mymw:label>
 		<mymw:entryfield id="field1" bind="{{profile.getNick}}" validationtype="String" style="req"/>
 		<mymw:label>Apellido1: </mymw:label>
