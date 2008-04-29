@@ -17,7 +17,7 @@ def get_template(template_name, device_family=None):
         print device_family
         template_name_device = path.join(device_family, template_name)
         source, origin = find_template_source(template_name_device)
-    except TemplateDoesNotExist:
+    except AttributeError, TemplateDoesNotExist:
         source, origin = find_template_source(template_name)
     template = get_template_from_string(source, origin, template_name)
     return template
