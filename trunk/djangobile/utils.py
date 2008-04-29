@@ -4,6 +4,11 @@ import re
 from django.conf import settings
 from django.utils.translation import gettext as _
 
+
+class UserAgentPatternException(Exception):
+    pass
+
+
 def get_device_family(user_agent):
     user_agents_ignore_case = hasattr(settings, 'MOBILE_USER_AGENTS_IGNORE_CASE') and settings.MOBILE_USER_AGENTS_IGNORE_CASE
     
@@ -24,15 +29,13 @@ def get_device_family(user_agent):
                         continue
             else:
                 raise UserAgentPatternException
+    if "firefox" in user_agent:
+        return "firefox"
+    elif "konqueror" in user_agent:
+        return "konqueror"
+    elif "nokia" in user_agent:
+        return "nokia"
     else:
-        if "firefox" in user_agent:
-            return "firefox"
-        elif "konqueror" in user_agent:
-            return "konqueror"
-        elif "nokia" in user_agent:
-            return "nokia"
-        else:
-            return None
+        return None
 
-class UserAgentPatternException(Exception):
-    pass
+
