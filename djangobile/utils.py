@@ -4,8 +4,8 @@ import re
 from django.conf import settings
 from django.utils.translation import gettext as _
 
-from djangobile.wurfl import devices
-from djangobile.pywurfl.algorithms import Tokenizer
+from wurfl import devices
+from pywurfl.algorithms import Tokenizer
 
 
 class UserAgentPatternException(Exception):
