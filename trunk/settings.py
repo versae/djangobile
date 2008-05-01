@@ -36,7 +36,6 @@ LANGUAGE_CODE = 'es-es'
 LANGUAGES = (
   ('es', _('Spanish')),
   ('en', _('English')),
-  
 )
 
 SITE_ID = 1
@@ -109,5 +108,5 @@ CACHE_DEF_EXPIRE = 60 * 60 * 24
 # Default: id, user_agent, fall_back, preferred_markup, model_name, brand_name
 DEVICE_SEARCH_ORDER = (
     'user_agent',
-    'brand_name'
+    'brand_name',
 )

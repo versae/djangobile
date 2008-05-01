@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from os import path
-
 from django.http import HttpResponse
 from django.template import TemplateDoesNotExist
 
