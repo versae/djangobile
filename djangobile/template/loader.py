@@ -3,9 +3,9 @@ from os import path
 
 from django.template import TemplateDoesNotExist
 from django.template.loader import find_template_source, get_template_from_string
-from django.conf import settings
 
 from djangobile.ideal import Ideal
+from djangobile.utils import get_device_template_paths
 
 
 def get_template(template_name, device=None):
@@ -16,26 +16,7 @@ def get_template(template_name, device=None):
     source, origin = None, None
     exception_list = []
     if device:
-        if hasattr(settings, 'DEVICE_SEARCH_ORDER'):
-            device_path_dic = {'id': path.join(device.devid, template_name),
-                        'user_agent': path.join(device.devua, template_name),
-                        'fall_back': path.join(device.fall_back, template_name),
-                        'preferred_markup': path.join(device.preferred_markup, template_name),
-                        'model_name': path.join(device.model_name, template_name),
-                        'brand_name': path.join(device.brand_name, template_name)}
-            device_path_list = []
-            for device_path in settings.DEVICE_SEARCH_ORDER:
-                if device_path in device_path_dic:
-                    device_path_list.append(device_path_dic.pop(device_path))
-            for device_path in device_path_dic:
-                device_path_list.append(device_path_dic.get(device_path))
-        else:
-            device_path_list = [path.join(device.devid, template_name),
-                        path.join(device.devua, template_name),
-                        path.join(device.fall_back, template_name),
-                        path.join(device.preferred_markup, template_name),
-                        path.join(device.model_name, template_name),
-                        path.join(device.brand_name, template_name)]
+        device_path_list = get_device_template_paths(device, template_name)
         for device_path in device_path_list:
             try:
                 source, origin = find_template_source(device_path)

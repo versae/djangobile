@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+from os import path
 
 from django.conf import settings
 from django.utils.translation import gettext as _
@@ -13,35 +14,26 @@ def get_device(user_agent=None, device_id=None):
     if user_agent:
         device = devices.select_ua(user_agent, filter_noise=True, search=Tokenizer(), instance=True)
     else:
-        deice = devices.select_id(user_agent, instance=True)
-    return device
+        device = devices.select_id(user_agent, instance=True)
+    device_dic = {}
+    for device_property in device:
+        capability = device_property[1]
+        value = device_property[2]
+        device_dic[capability] = value
+    device_dic['id'] = device.devid
+    device_dic['user_agent'] = device.devua
+    device_dic['fall_back'] = device.fall_back
+    return device_dic
 
-#    user_agents_ignore_case = hasattr(settings, 'MOBILE_USER_AGENTS_IGNORE_CASE') and settings.MOBILE_USER_AGENTS_IGNORE_CASE    
-#    if hasattr(settings, 'MOBILE_USER_AGENTS_PATTERNS') and isinstance(settings.MOBILE_USER_AGENTS_PATTERNS, (list, tuple)):
-#        for user_agent_pattern in settings.MOBILE_USER_AGENTS_PATTERNS:
-#            if isinstance(user_agent_pattern, (list, tuple)) and len(user_agent_pattern) == 2:
-#                pattern = user_agent_pattern[0]
-#                fall_back = user_agent_pattern[1]
-#                if not user_agents_ignore_case:
-#                    if re.compile(pattern).match(user_agent):
-#                        return fall_back
-#                    else:
-#                        continue
-#                else:
-#                    if re.compile(pattern, re.I).match(user_agent.lower()):
-#                        return fall_back
-#                    else:
-#                        continue
-#            else:
-#                raise UserAgentPatternException
-#    if "firefox" in user_agent:
-#        return "firefox"
-#    elif "konqueror" in user_agent:
-#        return "konqueror"
-#    elif "nokia" in user_agent:
-#        return "nokia"
-#    else:
-#        return None
 
-#class UserAgentPatternException(Exception):
-#    pass
+def get_device_template_paths(device, template_name):
+    device_properties = ['id', 'user_agent', 'fall_back', 'preferred_markup', 'model_name', 'brand_name']
+    device_path_list = []
+    if hasattr(settings, 'DEVICE_SEARCH_ORDER'):
+        for device_property in settings.DEVICE_SEARCH_ORDER:
+            if device_property in device_properties:
+                device_path_list.append(path.join(device.get(device_property), template_name))
+                device_properties.remove(device_property)
+    for device_property in device_properties:
+        device_path_list.append(path.join(device.get(device_property), template_name))
+    return device_path_list
