@@ -6,5 +6,4 @@ class Ideal(object):
         self.source = source
 
     def render(self, context):
-        print "context: %s" % context.get('HTTP_USER_AGENT', None)
         return self.source
