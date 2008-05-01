@@ -105,9 +105,9 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 CACHE_DEF_EXPIRE = 60 * 60 * 24
 
-#MOBILE_IGNORE_ADMIN = True
-MOBILE_USER_AGENTS_IGNORE_CASE = True
-MOBILE_USER_AGENTS_PATTERNS = (
-    ('(.*)(firefox)(.*)', 'firefox'),
-    ('(.*)(opera)(.*)', 'opera'),
+# List of device capabilities to order template search.
+# Default: id, user_agent, fall_back, preferred_markup, model_name, brand_name
+DEVICE_SEARCH_ORDER = (
+    'user_agent',
+    'brand_name'
 )

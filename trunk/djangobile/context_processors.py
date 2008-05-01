@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+from djangobile.utils import get_device
 
 def mobile(request):
-    return {'HTTP_USER_AGENT': request.META['HTTP_USER_AGENT']}
+    device = get_device(request.META['HTTP_USER_AGENT'])
+    return {'device': device}
