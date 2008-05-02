@@ -4,7 +4,9 @@ from django.utils import simplejson
 from djangobile.utils import get_device
 
 def mobile(request):
-    if request.session.test_cookie_worked():
+    if hasattr(request, 'device'):
+        device = request.device
+    elif request.session.test_cookie_worked():
         request.session.delete_test_cookie()
         device = request.session.get('device', False)
         if not device:

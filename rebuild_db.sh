@@ -14,7 +14,7 @@ if (( $? )) ; then
 fi
 
 echo "Generating wurfl.py"
-python wurfl2python.py wurfl/wurfl.xml -o wurfl.py
+python wurfl2python.py djangobile/wurfl/wurfl.xml -o djangobile/wurfl.py
 if (( $? )) ; then
   echo "Unable to create wurfl.py. "
   exit 1

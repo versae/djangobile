@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings 
+from django.utils import simplejson
+
+from djangobile.utils import get_device
+from djangobile.context_processors import mobile
 
 
 class DjangoMobileMiddleware(object):
@@ -10,5 +13,7 @@ class DjangoMobileMiddleware(object):
         return None
 
     def process_request(self, request):
+        device = mobile(request)['device']
+        setattr(request, 'device', device)
         return None
 
