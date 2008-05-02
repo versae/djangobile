@@ -9,14 +9,14 @@ fi
 
 ./manage.py syncdb
 if (( $? )) ; then
-  echo "Unable to create new schema (syncdb). "
+  echo "Unable to create new schema (syncdb)."
   exit 1
 fi
 
 echo "Generating wurfl.py"
-python wurfl2python.py djangobile/wurfl/wurfl.xml -o djangobile/wurfl.py
+python wurfl2python.py wurfl/wurfl.xml -o djangobile/wurfl.py
 if (( $? )) ; then
-  echo "Unable to create wurfl.py. "
+  echo "Unable to create wurfl.py."
   exit 1
 fi
 
