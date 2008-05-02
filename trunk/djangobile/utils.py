@@ -13,7 +13,6 @@ def get_device(user_agent=None, device_id=None):
         devices = getattr(__import__(settings.WURFL_CLASS, {}, {}, ['devices']), 'devices')
     else:
         from djangobile.wurfl import devices
-
     if user_agent:
         device = devices.select_ua(user_agent, filter_noise=True, search=Tokenizer(), instance=True)
     else:
@@ -26,15 +25,16 @@ def get_device(user_agent=None, device_id=None):
     device_dic['fall_back'] = device.fall_back
     return device_dic
 
-
 def get_device_template_paths(device, template_name):
     device_properties = ['id', 'user_agent', 'fall_back', 'preferred_markup', 'model_name', 'brand_name']
     device_path_list = []
     if hasattr(settings, 'DEVICE_SEARCH_ORDER'):
         for device_property in settings.DEVICE_SEARCH_ORDER:
             if device_property in device_properties:
-                device_path_list.append(path.join(device.get(device_property), template_name))
+                device_path = path.join(device.get(device_property), template_name)
+                device_path_list.append(device_path)
                 device_properties.remove(device_property)
     for device_property in device_properties:
-        device_path_list.append(path.join(device.get(device_property), template_name))
+        device_path = path.join(device.get(device_property), template_name)
+        device_path_list.append(device_path)
     return device_path_list
