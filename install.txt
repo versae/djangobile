@@ -1,4 +1,4 @@
 Dependencies:
 -------------
-
-
+- pywurfl-6.4.0b
+    Python tools for processing and querying the Wireless Universal Resource File (WURFL)
