@@ -16,7 +16,7 @@ def get_device(user_agent=None, device_id=None):
     if user_agent:
         device = devices.select_ua(user_agent, filter_noise=True, search=Tokenizer(), instance=True)
     else:
-        device = devices.select_id(user_agent, instance=True)
+        device = devices.select_id(device_id, instance=True)
     device_dic = {}
     for group, capability, value in device:
         device_dic[capability] = value

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from os import path
 
+from django.conf import settings
 from django.template import TemplateDoesNotExist
 from django.template.loader import find_template_source, get_template_from_string
 
@@ -52,9 +53,12 @@ def render_to_string(template_name, dictionary=None, context_instance=None):
     else:
         context_instance = Context(dictionary)
 
-    rendered_temlate = t.render(context_instance)
-    ideal = Ideal(rendered_template)
-    return ideal.render(context_instance)
+    rendered_template = t.render(context_instance)
+    if hasattr(settings, 'IDEAL_LANGUAGE') and settings.IDEAL_LANGUAGE:
+        ideal = Ideal(rendered_template)
+        return ideal.render(context_instance)
+    else:
+        return rendered_template
 
 def select_template(template_name_list, device=None):
     "Given a list of template names, returns the first that can be loaded."
