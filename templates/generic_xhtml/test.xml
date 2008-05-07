@@ -16,7 +16,7 @@
 		<mymw:entryfield id="field2" bind="{{profile.getFirstName}}" validationtype="String" style="req"/>
 		<mymw:label>Apellido2: </mymw:label>
 		<mymw:entryfield id="field3" bind="{{profile}}" validationtype="String" style="req"/>
-		<mymw:label>Cumpleaños: </mymw:label>
+		<mymw:label>Cumpledaos: </mymw:label>
 		
 		<mymw:entryfield id="field3" bind="{{profile.getBirthDate}}" validationtype="Date" style="req"/>
 		<mymw:submit id="subform" style="novalid" value="Submit"/>
