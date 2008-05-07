@@ -54,7 +54,7 @@ def render_to_string(template_name, dictionary=None, context_instance=None):
         context_instance = Context(dictionary)
 
     rendered_template = t.render(context_instance)
-    if hasattr(settings, 'IDEAL_LANGUAGE') and settings.IDEAL_LANGUAGE:
+    if hasattr(settings, 'IDEAL_LANGUAGE_SUPPORT') and settings.IDEAL_LANGUAGE:
         ideal = Ideal(rendered_template)
         return ideal.render(context_instance)
     else:
