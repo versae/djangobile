@@ -26,7 +26,7 @@ class GenericXhtml(object):
     def __init__(self, source, namespace="http://morfeo-project.org/mymobileweb"):
         self.source = source
         self.doc = xml.dom.minidom.parseString(source)
-        self.document = doc.getElementsByTagNameNS(namespace, 'document')[0]
+        self.document = self.doc.getElementsByTagNameNS(namespace, 'document')[0]
 
     def ns(self, node):
         return "%s:%s" % (self.document.prefix, node)
