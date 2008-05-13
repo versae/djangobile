@@ -6,7 +6,7 @@ from django.template.loader import get_template_from_string, get_template, rende
 
 class Ideal(object):
     def __init__(self, source, origin=None, name=None):
-        self.source = source
+        self.source = source.encode("utf-8")
 
     def render(self, context=None, cls=None):
         if not context:
