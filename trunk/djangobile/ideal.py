@@ -36,11 +36,27 @@ class GenericXhtml(object):
         title = self.doc.getElementsByTagNameNS(self.ns, 'title')[0]
         self.data['title'] = title.firstChild.data
 
-    def ns(self, node):
-        return "%s:%s" % (self.document.prefix, node)
+    def namespace(self, node_name):
+        return "%s:%s" % (self.document.prefix, node_name)
 
     def render(self, context):
+        body = self.doc.getElementsByTagNameNS(self.ns, 'body')[0]
+        self.data['body'] = minidom.Element('body')
+        for child_node in body.childNodes:
+            self._resolve(self.data['body'], child_node, context)
+        self.data['body'] = self.data['body'].toprettyxml()
         return render_to_string('generic_xhtml.html', self.data, context)
+
+    def _resolve(self, parent_node, child_node, context=None):
+        if child_node.nodeName == self.namespace('p'):
+            _parent_node = minidom.Element('p')
+        elif child_node.nodeName == self.namespace('label'):
+            _parent_node = minidom.Element('label')
+        else:
+            _parent_node = minidom.Element(child_node.nodeName)
+        for _child_node in child_node.childNodes:
+            self._resolve(_parent_node, _child_node, context)
+        parent_node.appendChild(_parent_node)
 
     def entryfield(self):
         pass
