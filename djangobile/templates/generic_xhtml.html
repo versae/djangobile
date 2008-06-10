@@ -20,12 +20,12 @@
     </style>
     {% endif %}
     {% if script %}
-    <script type="text/javascript" language="javasscript">
+    <script type="text/javascript" language="javascript">
     {{ script }}
     </script>
     {% endif %}
 </head>
-<body>
-
-</body>
+{% autoescape off %}
+{{ body }}
+{% endautoescape %}
 </html>
