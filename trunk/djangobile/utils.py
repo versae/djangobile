@@ -23,6 +23,11 @@ def get_device(user_agent=None, device_id=None):
     device_dic['id'] = device.devid
     device_dic['user_agent'] = device.devua
     device_dic['fall_back'] = device.fall_back
+    # TODO: Make real this value!
+    device_dic['is_pc_device'] = ('firefox' in device.devua.lower()) or \
+                                 ('explorer' in device.devua.lower()) or \
+                                 ('opera' in device.devua.lower()) or \
+                                 ('safari' in device.devua.lower())
     return device_dic
 
 def get_device_template_paths(device, template_name):

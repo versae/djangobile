@@ -34,7 +34,8 @@ def get_template(template_name, device=None):
     template = get_template_from_string(source, origin, template_name)
     return template
 
-def render_to_string(template_name, dictionary=None, context_instance=None):
+def render_to_string(template_name, dictionary=None, context_instance=None, \
+                    mobile_template_name=None, processor_class=None):
     """
     Loads the given template_name and renders it with the given dictionary as
     context. The template_name may be a string to load a single template using
@@ -43,6 +44,9 @@ def render_to_string(template_name, dictionary=None, context_instance=None):
     """
     dictionary = dictionary or {}
     device = context_instance.get('device', None)
+    is_pc_device = device.get('is_pc_device', False)
+    if mobile_template_name and not is_pc_device:
+        template_name = mobile_template_name
 
     if isinstance(template_name, (list, tuple)):
         t = select_template(template_name, device)
@@ -54,11 +58,11 @@ def render_to_string(template_name, dictionary=None, context_instance=None):
         context_instance = Context(dictionary)
 
     rendered_template = t.render(context_instance)
-    if hasattr(settings, 'IDEAL_LANGUAGE_SUPPORT') and settings.IDEAL_LANGUAGE_SUPPORT:
-        ideal = Ideal(rendered_template)
-        return ideal.render(context_instance)
-    else:
+    if is_pc_device:
         return rendered_template
+    elif hasattr(settings, 'IDEAL_LANGUAGE_SUPPORT') and settings.IDEAL_LANGUAGE_SUPPORT:
+        ideal = Ideal(rendered_template)
+        return ideal.render(context_instance, cls=processor_class)
 
 def select_template(template_name_list, device=None):
     "Given a list of template names, returns the first that can be loaded."

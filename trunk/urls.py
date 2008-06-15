@@ -1,12 +1,8 @@
 from os import path
 from django.conf.urls.defaults import *
 from django.conf import settings
-from settings import BASEDIR
-
-BASEDIR = path.dirname(path.abspath(__file__))
 
 urlpatterns = patterns('',
-
     # Static content
     (r'^site_media/(.*)$', 'django.views.static.serve', {'document_root': path.join(settings.BASEDIR, 'media')}),
 
