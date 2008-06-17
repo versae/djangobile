@@ -8,25 +8,6 @@ EXPRESSION_LANGUAGE_TAG_START = '${'
 EXPRESSION_LANGUAGE_TAG_END = '}'
 
 
-class Ideal(object):
-    def __init__(self, source, origin=None, name=None):
-        self.source = source.encode("utf-8")
-
-    def render(self, context=None, cls=None):
-        if not context:
-            return self.source
-        device = context.get('device')
-        if cls:
-            processor = cls(self.source)
-            return processor.render(context)
-        fall_back = device.get('fall_back').lower()
-        if fall_back in ('generic', 'generic_xhtml'):
-            processor = GenericXhtml(self.source)
-        else:
-            return self.source
-        return processor.render(context)
-
-
 class GenericXhtml(object):
     def __init__(self, source, namespace="http://morfeo-project.org/mymobileweb"):
         self.source = source
@@ -128,3 +109,28 @@ class GenericXhtml(object):
                 bind = Variable(el).resolve(context)
         tag.setAttribute('value', bind)
         return tag
+
+
+class HtmlWeb(GenericXhtml):
+    pass
+
+
+class GenericIMode(GenericXhtml):
+    pass
+
+
+class IMode(GenericXhtml):
+    pass
+
+
+class OmaXhtmlMp(GenericXhtml):
+    pass
+
+
+class W3Xhtml(GenericXhtml):
+    pass
+
+
+class Wml(GenericXhtml):
+    pass
+

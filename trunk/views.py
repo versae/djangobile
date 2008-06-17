@@ -12,5 +12,5 @@ def index(request):
     return render_to_response('test.html',
                             {'profile': profile,
                             'list': l},
-                            mobile_template_name = 'test.xml',
-                            context_instance = RequestContext(request))
+                            mobile_template_name='test.xml',
+                            context_instance=RequestContext(request))
