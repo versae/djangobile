@@ -5,7 +5,7 @@ from django.conf import settings
 from django.template import TemplateDoesNotExist
 from django.template.loader import find_template_source, get_template_from_string
 
-from djangobile.ideal import Ideal
+from djangobile.template import Ideal
 from djangobile.utils import get_device_template_paths
 
 
@@ -44,7 +44,7 @@ def render_to_string(template_name, dictionary=None, context_instance=None, \
     """
     dictionary = dictionary or {}
     device = context_instance.get('device', None)
-    is_pc_device = device.get('is_pc_device', False)
+    is_pc_device = device.get('is_pc_device', True)
     if mobile_template_name and not is_pc_device:
         template_name = mobile_template_name
 
