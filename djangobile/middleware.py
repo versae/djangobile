@@ -1,12 +1,21 @@
 # -*- coding: utf-8 -*-
-from django.utils import simplejson
+from datetime import datetime
 
-from djangobile.utils import get_device
+from django.conf import settings
+
 from djangobile.context_processors import mobile
 
 
 class DjangoMobileMiddleware(object):
     def process_response(self, request, response):
+        if hasattr(settings, 'DEBUG') and settings.DEBUG:
+            print "[%s] From %s (%s): %s (%s)" % (
+                    datetime.today().strftime("%d/%b/%Y %H:%M:%S"),
+                    request.device.get('id', ''),
+                    request.device.get('preferred_markup', ''),
+                    request.device.get('user_agent', ''),
+                    request.META.get('HTTP_USER_AGENT', '')
+                )
         return response
 
     def process_view(self, request, view_func, view_args, view_kwargs):

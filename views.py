@@ -8,9 +8,9 @@ from djangobile.shortcuts import render_to_response
 def index(request):
     profile = {'getNick': 'djangobile',
                 'getFirstName': 'Django Mobile Middleware'}
-    l = [1, 2, 3]
-    return render_to_response('test.html',
+    l = range(1, 4)
+    
+    return render_to_response('test.xml',
                             {'profile': profile,
                             'list': l},
-                            mobile_template_name='test.xml',
                             context_instance=RequestContext(request))
