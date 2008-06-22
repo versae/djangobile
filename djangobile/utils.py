@@ -4,8 +4,6 @@ from os import path
 from django.conf import settings
 from django.utils.translation import gettext as _
 
-from pywurfl.algorithms import Tokenizer
-
 
 def get_device(user_agent=None, device_id=None):
     assert(((user_agent and not device_id) or (not user_agent and device_id)), _('user_agent or device_id must be passed, but not both.'))
@@ -13,8 +11,15 @@ def get_device(user_agent=None, device_id=None):
         devices = getattr(__import__(settings.WURFL_CLASS, {}, {}, ['devices']), 'devices')
     else:
         from djangobile.wurfl import devices
+    if hasattr(settings, 'USER_AGENT_SEARCH_ALGORITHM'):
+        search_algorithm = getattr(__import__('pywurfl.algorithms', {}, {}, \
+                            [settings.USER_AGENT_SEARCH_ALGORITHM]), \
+                            settings.USER_AGENT_SEARCH_ALGORITHM)()
+    else:
+        from pywurfl.algorithms import Tokenizer
+        search_algorithm = Tokenizer()
     if user_agent:
-        device = devices.select_ua(user_agent, filter_noise=True, search=Tokenizer(), instance=True)
+        device = devices.select_ua(user_agent, filter_noise=True, search=search_algorithm, instance=True)
     else:
         device = devices.select_id(device_id, instance=True)
     device_dic = {}
