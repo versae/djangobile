@@ -8,6 +8,10 @@ EXPRESSION_LANGUAGE_TAG_START = '${'
 EXPRESSION_LANGUAGE_TAG_END = '}'
 
 
+class MalformedIdealTemplateException(Exception):
+    pass
+
+
 class GenericXhtml(object):
     def __init__(self, source, namespace="http://morfeo-project.org/mymobileweb"):
         self.source = source
