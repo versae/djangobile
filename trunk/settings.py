@@ -94,7 +94,7 @@ TEMPLATE_DIRS = (
     path.join(BASEDIR, 'templates'),
     # In order to use IDEAL language support you must add this template
     # directory.
-    path.join(BASEDIR, 'djangobile/templates'),
+    path.join(BASEDIR, 'djangobile', 'templates'),
 )
 
 INSTALLED_APPS = (
