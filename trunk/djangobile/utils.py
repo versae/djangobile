@@ -11,19 +11,19 @@ def get_device(user_agent=None, device_id=None):
             _('user_agent or device_id must be passed, but not both.'))
     if hasattr(settings, 'WURFL_CLASS'):
         devices = getattr(__import__(settings.WURFL_CLASS, {}, {}, \
-                                    ['devices']), 'devices')
+                                     ['devices']), 'devices')
     else:
         from djangobile.wurfl import devices
     if hasattr(settings, 'USER_AGENT_SEARCH_ALGORITHM'):
         search_algorithm = getattr(__import__('pywurfl.algorithms', {}, {}, \
-                            [settings.USER_AGENT_SEARCH_ALGORITHM]), \
-                            settings.USER_AGENT_SEARCH_ALGORITHM)()
+                                      [settings.USER_AGENT_SEARCH_ALGORITHM]), \
+                                      settings.USER_AGENT_SEARCH_ALGORITHM)()
     else:
         from pywurfl.algorithms import Tokenizer
         search_algorithm = Tokenizer()
     if user_agent:
         device = devices.select_ua(user_agent, filter_noise=True, \
-                                    search=search_algorithm, instance=True)
+                                   search=search_algorithm, instance=True)
     else:
         device = devices.select_id(device_id, instance=True)
     device_dic = {}
@@ -35,18 +35,18 @@ def get_device(user_agent=None, device_id=None):
     # TODO: Make real these values!
     device_user_agent = device.devua.lower()
     device_dic['is_pc_device'] = ('firefox' in device_user_agent) or \
-                                ('explorer' in device_user_agent) or \
-                                ('opera' in device_user_agent) or \
-                                ('safari' in device_user_agent)
+                                 ('explorer' in device_user_agent) or \
+                                 ('opera' in device_user_agent) or \
+                                 ('safari' in device_user_agent)
     device_dic['is_pda_device'] = device_dic['is_pc_device'] and \
-                                ('windows mobile' in device_user_agent)
+                                  ('windows mobile' in device_user_agent)
     device_dic['is_mobile_device'] = not device_dic['is_pc_device'] and \
-                                not device_dic['is_pda_device']
+                                     not device_dic['is_pda_device']
     return device_dic
 
 def get_device_template_paths(device, template_name):
     device_properties = ['id', 'user_agent', 'fall_back', 'preferred_markup', \
-                        'model_name', 'brand_name']
+                         'model_name', 'brand_name']
     device_path_list = []
     if hasattr(settings, 'DEVICE_SEARCH_ORDER'):
         for device_property in settings.DEVICE_SEARCH_ORDER:
@@ -67,7 +67,25 @@ def get_device_template_paths(device, template_name):
             device_path_list.append(device_path)
     return device_path_list
 
-def is_ideal_template(template_name):
-    mime_type = guess_type(template_name)
-    # TODO: Improve this detection
-    return (mime_type[0] == 'application/xml')
+def is_ideal_template(rendered_template, template_name=None):
+    validates_xml_schema = True
+    if hasattr(settings, 'IDEAL_XML_SCHEMA_FILE'):
+        xsd_file = open(settings.IDEAL_XML_SCHEMA_FILE)
+    else:
+        xsd_file = open(path.join('djangobile', 'transformations', 'cmt.xsd'))
+    try:
+        import lxml.etree as etree
+        from StringIO import StringIO
+        xml_schema_doc = etree.parse(xsd_file)
+        xml_schema = etree.XMLSchema(xml_schema_doc)
+        ideal_file = StringIO(rendered_template.encode("utf-8"))
+        ideal_doc = etree.parse(ideal_file)
+        validates_xml_schema = xml_schema.validate(ideal_doc)
+    except ImportError:
+        pass
+    xsd_file.close()
+    if template_name:
+        mime_type = guess_type(template_name)
+        return (mime_type[0] == 'application/xml') and validates_xml_schema
+    else:
+        return validates_xml_schema

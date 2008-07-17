@@ -3,10 +3,11 @@ from os import path
 
 from django.conf import settings
 from django.template import TemplateDoesNotExist
-from django.template.loader import find_template_source, get_template_from_string
+from django.template.loader import (find_template_source, \
+                                    get_template_from_string)
 
 from djangobile.template import Ideal
-from djangobile.utils import get_device_template_paths, is_ideal_template
+from djangobile.utils import (get_device_template_paths, is_ideal_template)
 
 
 def get_template(template_name, device=None):
@@ -36,7 +37,7 @@ def get_template(template_name, device=None):
     return template
 
 def render_to_string(template_name, dictionary=None, context_instance=None, \
-                    processor_class=None):
+                     processor_class=None):
     """
     Loads the given template_name and renders it with the given dictionary as
     context. The template_name may be a string to load a single template using
@@ -57,7 +58,8 @@ def render_to_string(template_name, dictionary=None, context_instance=None, \
 
     rendered_template = t.render(context_instance)
     if hasattr(settings, 'IDEAL_LANGUAGE_SUPPORT') and \
-            settings.IDEAL_LANGUAGE_SUPPORT and is_ideal_template(template_name):
+       settings.IDEAL_LANGUAGE_SUPPORT and is_ideal_template(rendered_template, \
+                                                             template_name):
         ideal = Ideal(rendered_template)
         return ideal.render(context_instance, cls=processor_class)
     else:

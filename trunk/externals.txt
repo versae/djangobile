@@ -1,0 +1,6 @@
+#
+# Create this file: svn propget svn:externals . > externals.txt
+# Apply this file:  svn propset svn:externals -F externals.txt .
+#
+
+transformations https://svn.morfeo-project.org/svn/mymobileweb/trunk/MobilityChannelCodeGenerators/resources/transformations/xsd
