@@ -7,6 +7,7 @@ from django.template.loader import (find_template_source, \
                                     get_template_from_string)
 
 from djangobile.template import Ideal
+from djangobile.template.ideal import MalformedIdealTemplateException
 from djangobile.utils import (get_device_template_paths, is_ideal_template)
 
 
@@ -45,7 +46,7 @@ def render_to_string(template_name, dictionary=None, context_instance=None, \
     the templates in the list. Returns a string.
     """
     dictionary = dictionary or {}
-    device = context_instance.get('device', None)
+    device = context_instance.get('device', {})
 
     if isinstance(template_name, (list, tuple)):
         t = select_template(template_name, device)
@@ -58,8 +59,11 @@ def render_to_string(template_name, dictionary=None, context_instance=None, \
 
     rendered_template = t.render(context_instance)
     if hasattr(settings, 'IDEAL_LANGUAGE_SUPPORT') and \
-       settings.IDEAL_LANGUAGE_SUPPORT and is_ideal_template(rendered_template, \
-                                                             template_name):
+       settings.IDEAL_LANGUAGE_SUPPORT:
+        try:
+            is_ideal_template(rendered_template, template_name)
+        except AssertionError, e:
+            raise MalformedIdealTemplateException("(%s) %s: %s" % (device.get('user_agent', None), template_name, e.message))
         ideal = Ideal(rendered_template)
         return ideal.render(context_instance, cls=processor_class)
     else:
