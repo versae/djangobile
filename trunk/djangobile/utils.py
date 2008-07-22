@@ -84,6 +84,9 @@ def is_ideal_template(rendered_template, template_name=None):
     except ImportError:
         pass
     xsd_file.close()
+    if not validates_xml_schema and xml_schema and xml_schema.error_log:
+        raise AssertionError("Document does not comply with schema:\n%s"
+                             % xml_schema.error_log.last_error)
     if template_name:
         mime_type = guess_type(template_name)
         return (mime_type[0] == 'application/xml') and validates_xml_schema

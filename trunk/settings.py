@@ -109,6 +109,11 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 CACHE_DEF_EXPIRE = 60 * 60 * 24
 
+# Absolute path to the CSS's directory that holds media with extended
+# capabilities for devices.
+# Default: path.join(MEDIA_ROOT, 'css')
+IDEAL_CSS_DIR = path.join(MEDIA_ROOT, 'css')
+
 # If you set this to False, the IDEAL language not be processed neither
 # rendered, indeed Django will show a TemplateError on IDEAL templates.
 IDEAL_LANGUAGE_SUPPORT = True
@@ -121,8 +126,8 @@ IDEAL_XML_SCHEMA_FILE = path.join(BASEDIR, 'djangobile', 'transformations', \
 WURFL_CLASS = 'djangobile.wurfl'
 
 # User agent search algorithm.
-# Possible values are Tokenizer (default), JaroWinkler and LevenshteinDistance
-# JaroWinkler and LevenshteinDistance require Levenshtein Module >= 0.10.1
+# Possible values are Tokenizer (default), JaroWinkler and LevenshteinDistance.
+# JaroWinkler and LevenshteinDistance require Levenshtein Module >= 0.10.1.
 USER_AGENT_SEARCH_ALGORITHM = 'Tokenizer'
 
 # List of device capabilities to order template search.
