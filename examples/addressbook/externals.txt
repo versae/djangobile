@@ -4,3 +4,4 @@
 #
 
 djangobile https://djangobile.googlecode.com/svn/trunk/djangobile
+pywurfl https://djangobile.googlecode.com/svn/trunk/pywurfl
