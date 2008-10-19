@@ -5,24 +5,24 @@ from os import path
 from django.conf import settings
 from django.utils.translation import gettext as _
 
+try:
+    from extra_devices import devices
+except ImportError:
+    from djangobile import devices
+
 
 def get_device(user_agent=None, device_id=None):
-    assert(((user_agent and not device_id) or (not user_agent and device_id)), \
+    assert(((user_agent and not device_id) or (not user_agent and device_id)),
             _('user_agent or device_id must be passed, but not both.'))
-    if hasattr(settings, 'WURFL_CLASS'):
-        devices = getattr(__import__(settings.WURFL_CLASS, {}, {}, \
-                                     ['devices']), 'devices')
-    else:
-        from djangobile.wurfl import devices
     if hasattr(settings, 'USER_AGENT_SEARCH_ALGORITHM'):
-        search_algorithm = getattr(__import__('pywurfl.algorithms', {}, {}, \
-                                      [settings.USER_AGENT_SEARCH_ALGORITHM]), \
-                                      settings.USER_AGENT_SEARCH_ALGORITHM)()
+        search_algorithm = getattr(__import__('pywurfl.algorithms', {}, {},
+                                              [settings.USER_AGENT_SEARCH_ALGORITHM]),
+                                              settings.USER_AGENT_SEARCH_ALGORITHM)()
     else:
         from pywurfl.algorithms import Tokenizer
         search_algorithm = Tokenizer()
     if user_agent:
-        device = devices.select_ua(user_agent, filter_noise=True, \
+        device = devices.select_ua(user_agent, filter_noise=True,
                                    search=search_algorithm, instance=True)
     else:
         device = devices.select_id(device_id, instance=True)
@@ -34,18 +34,18 @@ def get_device(user_agent=None, device_id=None):
     device_dic['fall_back'] = device.fall_back
     # TODO: Make real these values!
     device_user_agent = device.devua.lower()
-    device_dic['is_pc_device'] = ('firefox' in device_user_agent) or \
-                                 ('explorer' in device_user_agent) or \
-                                 ('opera' in device_user_agent) or \
-                                 ('safari' in device_user_agent)
-    device_dic['is_pda_device'] = device_dic['is_pc_device'] and \
-                                  ('windows mobile' in device_user_agent)
-    device_dic['is_mobile_device'] = not device_dic['is_pc_device'] and \
-                                     not device_dic['is_pda_device']
+    device_dic['is_pc_device'] = (('firefox' in device_user_agent) or
+                                  ('explorer' in device_user_agent) or
+                                  ('opera' in device_user_agent) or
+                                  ('safari' in device_user_agent))
+    device_dic['is_pda_device'] = (device_dic['is_pc_device'] and
+                                   ('windows mobile' in device_user_agent))
+    device_dic['is_mobile_device'] = (not device_dic['is_pc_device'] and
+                                      not device_dic['is_pda_device'])
     return device_dic
 
 def get_device_template_paths(device, template_name):
-    device_properties = ['id', 'user_agent', 'fall_back', 'preferred_markup', \
+    device_properties = ['id', 'user_agent', 'fall_back', 'preferred_markup',
                          'model_name', 'brand_name']
     device_path_list = []
     if hasattr(settings, 'DEVICE_SEARCH_ORDER'):
