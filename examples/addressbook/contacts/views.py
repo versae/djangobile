@@ -15,7 +15,6 @@ def show(request):
     return HttpResponse('mostrado')
 
 
-@login_required
 def list(request):
     return HttpResponse('listado')
 
