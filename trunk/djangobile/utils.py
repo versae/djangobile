@@ -32,17 +32,12 @@ def get_device(user_agent=None, device_id=None):
     device_dic['id'] = device.devid
     device_dic['user_agent'] = device.devua
     device_dic['fall_back'] = device.fall_back
-    # TODO: Make real these values!
-    device_user_agent = device.devua.lower()
-    device_dic['is_pc_device'] = (('firefox' in device_user_agent) or
-                                  ('explorer' in device_user_agent) or
-                                  ('opera' in device_user_agent) or
-                                  ('safari' in device_user_agent))
-    device_dic['is_pda_device'] = (device_dic['is_pc_device'] and
-                                   ('windows mobile' in device_user_agent))
-    device_dic['is_mobile_device'] = (not device_dic['is_pc_device'] and
-                                      not device_dic['is_pda_device'])
+
+    device_families = get_device_families(device)
+    device_dic['family'] = device_families
+
     return device_dic
+
 
 def get_device_template_paths(device, template_name):
     device_properties = ['id', 'user_agent', 'fall_back', 'preferred_markup',
@@ -66,6 +61,37 @@ def get_device_template_paths(device, template_name):
             device_path = path.join(device_property_lower, template_name)
             device_path_list.append(device_path)
     return device_path_list
+
+
+def get_device_families(device):
+    device_dic = {}
+    try:
+        from pywurfl.ql import QL, QueryLanguageError
+        try:
+            from extra_families import families
+        except ImportError:
+            from djangobile import families
+        query_devices = QL(devices)
+        for (family, query) in families.items():
+            if callable(query):
+                device_dic[family] = bool(query(device))
+            else:
+                ql = """select device where %s""" % query
+                device_dic[family] = False
+                for dev in query_devices(ql):
+                    if device.devid == dev.devid:
+                        device_dic[family] = True
+                        break;
+    except ImportError:
+        device_user_agent = device.devua.lower()
+        device_dic['pc_device'] = (('firefox' in device_user_agent) or
+                                      ('explorer' in device_user_agent) or
+                                      ('opera' in device_user_agent) or
+                                      ('safari' in device_user_agent))
+        device_dic['pda_device'] = ((not device_dic['is_pc_device']) and
+                                       ('windows mobile' in device_user_agent))
+    return device_dic
+
 
 def is_ideal_template(rendered_template, template_name=None):
     validates_xml_schema = True
