@@ -20,7 +20,6 @@ def get_template(template_name, device=None):
     exception_list = []
     if device:
         device_path_list = get_device_template_paths(device, template_name)
-        print device_path_list
         for device_path in device_path_list:
             try:
                 source, origin = find_template_source(device_path)

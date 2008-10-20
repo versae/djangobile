@@ -41,19 +41,33 @@ def get_device(user_agent=None, device_id=None):
 
 def get_device_template_paths(device, template_name):
     device_properties = ['id', 'user_agent', 'fall_back', 'preferred_markup',
-                         'model_name', 'brand_name']
+                         'model_name', 'brand_name', 'family']
     device_path_list = []
     if hasattr(settings, 'DEVICE_SEARCH_ORDER'):
         for device_property in settings.DEVICE_SEARCH_ORDER:
             if device_property in device_properties:
-                device_path = path.join(device.get(device_property), template_name)
-                device_path_list.append(device_path)
-                device_property_lower = device.get(device_property).lower()
-                if device_property_lower != device.get(device_property):
-                    device_path = path.join(device_property_lower, template_name)
+                if device_property == 'family':
+                    for family in device.get(device_property):
+                        device_family = device['family'].get(family, False)
+                        if device_family:
+                            device_path = path.join(family, template_name)
+                            device_path_list.append(device_path)
+                else:
+                    device_path = path.join(device.get(device_property), template_name)
                     device_path_list.append(device_path)
+                    device_property_lower = device.get(device_property).lower()
+                    if device_property_lower != device.get(device_property):
+                        device_path = path.join(device_property_lower, template_name)
+                        device_path_list.append(device_path)
                 device_properties.remove(device_property)
     for device_property in device_properties:
+        if device_property == 'family':
+            for family in device.get(device_property):
+                device_family = device['family'].get(family, False)
+                if device_family:
+                    device_path = path.join(family, template_name)
+                    device_path_list.append(device_path)
+            break;
         device_path = path.join(device.get(device_property), template_name)
         device_path_list.append(device_path)
         device_property_lower = device.get(device_property).lower()
@@ -76,20 +90,20 @@ def get_device_families(device):
             if callable(query):
                 device_dic[family] = bool(query(device))
             else:
-                ql = """select device where %s""" % query
+                ql = """select id where %s""" % query
                 device_dic[family] = False
-                for dev in query_devices(ql):
-                    if device.devid == dev.devid:
+                for device_id in query_devices(ql):
+                    if device.devid == device_id:
                         device_dic[family] = True
                         break;
     except ImportError:
         device_user_agent = device.devua.lower()
         device_dic['pc_device'] = (('firefox' in device_user_agent) or
-                                      ('explorer' in device_user_agent) or
-                                      ('opera' in device_user_agent) or
-                                      ('safari' in device_user_agent))
+                                   ('explorer' in device_user_agent) or
+                                   ('opera' in device_user_agent) or
+                                   ('safari' in device_user_agent))
         device_dic['pda_device'] = ((not device_dic['is_pc_device']) and
-                                       ('windows mobile' in device_user_agent))
+                                    ('windows mobile' in device_user_agent))
     return device_dic
 
 
