@@ -11,7 +11,7 @@ else:
 
 families = {}
 families['pc_device'] = """preferred_markup = 'html_web_4_0' and """ \
-                        """is_wireless_device = true"""
+                        """is_wireless_device = false"""
 families['pda_device'] = """preferred_markup = 'html_web_3_2' and """ \
                          """rows > 8 and rows < 15 and columns < 40 and """ \
                          """is_wireless_device = true"""
