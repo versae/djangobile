@@ -2,7 +2,7 @@
 from os import path
 
 from django.conf import settings
-from django.template import TemplateDoesNotExist
+from django.template import TemplateDoesNotExist, add_to_builtins
 from django.template.loader import (find_template_source, \
                                     get_template_from_string)
 
@@ -17,22 +17,22 @@ def get_template(template_name, device=None):
     handling template inheritance recursively.
     """
     source, origin = None, None
-    exception_list = []
+    exceptions_list = []
     if device:
         device_path_list = get_device_template_paths(device, template_name)
         for device_path in device_path_list:
             try:
                 source, origin = find_template_source(device_path)
             except TemplateDoesNotExist:
-                exception_list.append(device_path)
+                exceptions_list.append(device_path)
             if source and origin:
                 break
     if not source or not origin:
         try:
             source, origin = find_template_source(template_name)
         except TemplateDoesNotExist:
-            exception_list.append(template_name)
-            raise TemplateDoesNotExist, exception_list
+            exceptions_list.append(template_name)
+            raise TemplateDoesNotExist, exceptions_list
     template = get_template_from_string(source, origin, template_name)
     return template
 
@@ -78,3 +78,4 @@ def select_template(template_name_list, device=None):
     # If we get here, none of the templates could be loaded
     raise TemplateDoesNotExist, ', '.join(template_name_list)
 
+add_to_builtins('djangobile.template.loader_tags')
