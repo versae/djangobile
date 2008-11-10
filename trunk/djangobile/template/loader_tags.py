@@ -59,8 +59,7 @@ class DeviceExtendsNode(ExtendsNode):
             except TemplateDoesNotExist:
                 exceptions_list.append(parent)
                 raise TemplateSyntaxError, "Template (%s) cannot be extended, because it doesn't exist" % ", ".join(exceptions_list)
-        else:
-            return get_template_from_string(source, origin, parent)
+        return get_template_from_string(source, origin, parent)
 
 
 class DeviceConstantIncludeNode(ConstantIncludeNode):
