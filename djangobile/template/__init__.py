@@ -1,4 +1,58 @@
 # -*- coding: utf-8 -*-
+from inspect import getargspec
+from django.conf import settings
+from django.template import Node, Variable, generic_tag_compiler
+from django.template.context import Context
+from django.utils.itercompat import is_iterable
+from django.utils.functional import curry
+from django.utils.html import escape
+
+from django.template import Library as DjangoLibrary
+
+
+class Library(DjangoLibrary):
+    def inclusion_tag(self, file_name, context_class=Context, takes_context=False):
+        def dec(func):
+            params, xx, xxx, defaults = getargspec(func)
+            if takes_context:
+                if params[0] == 'context':
+                    params = params[1:]
+                else:
+                    raise TemplateSyntaxError("Any tag function decorated with takes_context=True must have a first argument of 'context'")
+
+            class InclusionNode(Node):
+                def __init__(self, vars_to_resolve):
+                    self.vars_to_resolve = map(Variable, vars_to_resolve)
+
+                def render(self, context):
+                    resolved_vars = [var.resolve(context) for var in self.vars_to_resolve]
+                    if takes_context:
+                        args = [context] + resolved_vars
+                    else:
+                        args = resolved_vars
+
+                    dict = func(*args)
+
+                    if not getattr(self, 'nodelist', False):
+                        from djangobile.template.loader import get_template, select_template
+                        device = getattr(context.get('request', None), 'device', None)
+                        if device:
+                            args = (file_name, device)
+                        else:
+                            args = (file_name, )
+                        if not isinstance(file_name, basestring) and is_iterable(file_name):
+                            t = select_template(*args)
+                        else:
+                            t = get_template(*args)
+                        self.nodelist = t.nodelist
+                    return self.nodelist.render(context_class(dict,
+                            autoescape=context.autoescape))
+
+            compile_func = curry(generic_tag_compiler, params, defaults, getattr(func, "_decorated_function", func).__name__, InclusionNode)
+            compile_func.__doc__ = func.__doc__
+            self.tag(getattr(func, "_decorated_function", func).__name__, compile_func)
+            return func
+        return dec
 
 
 class Ideal(object):
