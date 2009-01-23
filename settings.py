@@ -116,7 +116,7 @@ IDEAL_CSS_DIR = path.join(MEDIA_ROOT, 'css')
 
 # If you set this to False, the IDEAL language not be processed neither
 # rendered, indeed Django will show a TemplateError on IDEAL templates.
-IDEAL_LANGUAGE_SUPPORT = True
+IDEAL_LANGUAGE_SUPPORT = False
 
 # IDEAL XMLSchema file against whom IDEAL presentations will be validated.
 IDEAL_XML_SCHEMA_FILE = path.join(BASEDIR, 'djangobile', 'transformations',
@@ -130,12 +130,23 @@ WURFL_CLASS = 'djangobile.wurfl'
 # JaroWinkler and LevenshteinDistance require Levenshtein Module >= 0.10.1.
 USER_AGENT_SEARCH_ALGORITHM = 'Tokenizer'
 
+# Accuracy value for JaroWinkler search algorithm (0 to 1).
+# Default: 0.9
+JARO_WINKLER_ACCURACY = 0.9
+
 # List of device capabilities to order template search.
 # Default: id, user_agent, fall_back, preferred_markup, model_name, brand_name.
 DEVICE_SEARCH_ORDER = (
     'user_agent',
     'brand_name',
 )
+
+# Prefix for "extends" and "include" templatetags device aware.
+# If None, the native templatetags will be overwritten with
+# those where suitable.
+# Default: device.
+# And its use in templates is such as {% device_extends "template.hmtl" %}
+DEVICE_LOADER_TAGS_PREFIX = None
 
 #PREFERRED_MARKUP_ORDER = (
 #    'html_web_3_2',
