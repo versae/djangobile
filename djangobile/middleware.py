@@ -8,8 +8,9 @@ from djangobile.context_processors import mobile
 
 class DjangoMobileMiddleware(object):
     def process_response(self, request, response):
-        if (hasattr(settings, 'DEBUG') and settings.DEBUG
-            and hasattr(request, 'device')):
+        show_log = (getattr(settings, 'DEBUG', False) and 
+                    getattr(settings, 'DJANGOBILE_SHOW_LOG', False))
+        if (show_log and hasattr(request, 'device')):
             print "[%s] From %s (%s): %s (%s)" % (
                     datetime.today().strftime("%d/%b/%Y %H:%M:%S"),
                     request.device.get('id', ''),
