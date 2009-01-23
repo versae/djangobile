@@ -16,7 +16,7 @@ def get_device(user_agent=None, device_id=None):
     assert(((user_agent and not device_id) or (not user_agent and device_id)),
             _('user_agent or device_id must be passed, but not both.'))
     if hasattr(settings, 'USER_AGENT_SEARCH_ALGORITHM'):
-        if (settings.USER_AGENT_SEARCH_ALGORITHM == 'JaroWinkler':
+        if settings.USER_AGENT_SEARCH_ALGORITHM == 'JaroWinkler':
             kwaccuracy = {'accuracy': getattr(settings, 'JARO_WINKLER_ACCURACY', 0.9)}
         else:
             kwaccuracy = {}
