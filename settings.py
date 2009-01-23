@@ -141,6 +141,11 @@ DEVICE_SEARCH_ORDER = (
     'brand_name',
 )
 
+# If you set this to True, djangobile will print information about device in
+# each request through standard output. Useful to debug issues.
+# Default: True
+DJANGOBILE_SHOW_LOG = True
+
 # Prefix for "extends" and "include" templatetags device aware.
 # If None, the native templatetags will be overwritten with
 # those where suitable.
