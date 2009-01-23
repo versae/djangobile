@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from mimetypes import guess_type
+from pywurfl import algorithms
 from os import path
 
 from django.conf import settings
@@ -19,13 +20,15 @@ def get_device(user_agent=None, device_id=None):
                                               [settings.USER_AGENT_SEARCH_ALGORITHM]),
                                               settings.USER_AGENT_SEARCH_ALGORITHM)()
     else:
-        from pywurfl.algorithms import Tokenizer
-        search_algorithm = Tokenizer()
-    if user_agent:
-        device = devices.select_ua(user_agent, filter_noise=True,
-                                   search=search_algorithm, instance=True)
-    else:
-        device = devices.select_id(device_id, instance=True)
+        search_algorithm = algorithms.Tokenizer()
+    try:
+        if user_agent:
+            device = devices.select_ua(user_agent, filter_noise=True,
+                                       search=search_algorithm, instance=True)
+        else:
+            device = devices.select_id(device_id, instance=True)
+    except algorithms.DeviceNotFound:
+        device = devices.select_id('generic', instance=True)
     device_dic = {}
     for group, capability, value in device:
         device_dic[capability] = value
