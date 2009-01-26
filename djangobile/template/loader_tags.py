@@ -64,20 +64,29 @@ class DeviceExtendsNode(ExtendsNode):
 
 class DeviceConstantIncludeNode(ConstantIncludeNode):
     def __init__(self, template_path):
+        self.template_path = template_path
+
+    def render(self, context):
+        device = context.get('device', None)
         try:
-            t = get_template(template_path)
+            t = get_template(self.template_path, device)
             self.template = t
         except:
             if settings.TEMPLATE_DEBUG:
                 raise
             self.template = None
+        if self.template:
+            return self.template.render(context)
+        else:
+            return ''
 
 
 class DeviceIncludeNode(IncludeNode):
     def render(self, context):
+        device = context.get('device', None)
         try:
             template_name = self.template_name.resolve(context)
-            t = get_template(template_name)
+            t = get_template(template_name, device)
             return t.render(context)
         except TemplateSyntaxError, e:
             if settings.TEMPLATE_DEBUG:
