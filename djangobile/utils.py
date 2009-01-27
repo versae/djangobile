@@ -84,30 +84,6 @@ def get_device_template_paths(device, template_name):
     return device_path_list
 
 
-def get_device_template_dirs(device):
-    device_properties = ['id', 'user_agent', 'fall_back', 'preferred_markup',
-                         'model_name', 'brand_name']
-    device_dirs_list = []
-    if hasattr(settings, 'DEVICE_SEARCH_ORDER'):
-        for device_property in settings.DEVICE_SEARCH_ORDER:
-            if device_property in device_properties:
-                device_path = device.get(device_property)
-                device_dirs_list.append(device_path)
-                device_property_lower = device.get(device_property).lower()
-                if device_property_lower != device.get(device_property):
-                    device_path = device_property_lower
-                    device_dirs_list.append(device_path)
-                device_properties.remove(device_property)
-    for device_property in device_properties:
-        device_path = device.get(device_property)
-        device_dirs_list.append(device_path)
-        device_property_lower = device.get(device_property).lower()
-        if device_property_lower != device.get(device_property):
-            device_path = device_property_lower
-            device_dirs_list.append(device_path)
-    return device_dirs_list
-
-
 def get_device_families(device):
     device_dic = {}
     try:

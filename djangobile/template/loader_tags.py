@@ -5,7 +5,7 @@ from django.template.loader_tags import ExtendsNode, IncludeNode, ConstantInclud
 from django.conf import settings
 
 from djangobile.template.loader import get_template
-from djangobile.utils import get_device_template_dirs, get_device_template_paths
+from djangobile.utils import get_device_template_paths
 
 register = Library()
 
