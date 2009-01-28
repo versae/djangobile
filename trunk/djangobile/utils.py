@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 from mimetypes import guess_type
 from pywurfl import algorithms
 from os import path
@@ -10,6 +11,9 @@ try:
     from extra_devices import devices
 except ImportError:
     from djangobile import devices
+
+device_properties = ['id', 'user_agent', 'fall_back', 'preferred_markup',
+                     'model_name', 'brand_name', 'family']
 
 
 def get_device(user_agent=None, device_id=None):
@@ -47,8 +51,6 @@ def get_device(user_agent=None, device_id=None):
 
 
 def get_device_template_paths(device, template_name):
-    device_properties = ['id', 'user_agent', 'fall_back', 'preferred_markup',
-                         'model_name', 'brand_name', 'family']
     device_path_list = []
     if hasattr(settings, 'DEVICE_SEARCH_ORDER'):
         for device_property in settings.DEVICE_SEARCH_ORDER:
@@ -112,6 +114,29 @@ def get_device_families(device):
         device_dic['pda_device'] = ((not device_dic['pc_device']) and
                                     ('windows mobile' in device_user_agent))
     return device_dic
+
+
+def device_log(request):
+    show_log = (getattr(settings, 'DEBUG', False) and 
+                getattr(settings, 'DEVICE_SHOW_LOG', False))
+    if (show_log and hasattr(request, 'device')):
+        today = datetime.today().strftime("%d/%b/%Y %H:%M:%S")
+        properties = []
+        families = request.device.get('family', {})
+        _device_properties = device_properties[2:5]
+        for device_property in _device_properties:
+            prop = request.device.get(device_property, False)
+            if prop:
+                properties.append(prop)
+        for family in families:
+            if families[family]:
+                properties.append(family)
+        print "[%s] \"HTTP_USER_AGENT %s\"" % (today,
+                                   request.META.get('HTTP_USER_AGENT', 'No user agent!')
+        )
+        print "[%s] \"DEVICE %s\" (%s)" % (today,
+                                            request.device.get('id', 'No id!'),
+                                            ", ".join(properties))
 
 
 def is_ideal_template(rendered_template, template_name=None):
