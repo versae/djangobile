@@ -12,9 +12,6 @@ try:
 except ImportError:
     from djangobile import devices
 
-device_properties = ['id', 'user_agent', 'fall_back', 'preferred_markup',
-                     'model_name', 'brand_name', 'family']
-
 
 def get_device(user_agent=None, device_id=None):
     assert(((user_agent and not device_id) or (not user_agent and device_id)),
@@ -51,6 +48,8 @@ def get_device(user_agent=None, device_id=None):
 
 
 def get_device_template_paths(device, template_name):
+    device_properties = ['id', 'user_agent', 'fall_back', 'preferred_markup',
+                         'model_name', 'brand_name', 'family']
     device_path_list = []
     if hasattr(settings, 'DEVICE_SEARCH_ORDER'):
         for device_property in settings.DEVICE_SEARCH_ORDER:
@@ -123,8 +122,9 @@ def device_log(request, device):
         today = datetime.today().strftime("%d/%b/%Y %H:%M:%S")
         properties = []
         families = device.get('family', {})
-        _device_properties = device_properties[2:5]
-        for device_property in _device_properties:
+        device_properties = ['fall_back', 'preferred_markup', 'model_name',
+                             'brand_name']
+        for device_property in device_properties:
             prop = device.get(device_property, False)
             if prop:
                 properties.append(prop)
