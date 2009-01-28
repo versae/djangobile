@@ -116,16 +116,16 @@ def get_device_families(device):
     return device_dic
 
 
-def device_log(request):
+def device_log(request, device):
     show_log = (getattr(settings, 'DEBUG', False) and 
                 getattr(settings, 'DEVICE_SHOW_LOG', False))
     if (show_log and hasattr(request, 'device')):
         today = datetime.today().strftime("%d/%b/%Y %H:%M:%S")
         properties = []
-        families = request.device.get('family', {})
+        families = device.get('family', {})
         _device_properties = device_properties[2:5]
         for device_property in _device_properties:
-            prop = request.device.get(device_property, False)
+            prop = device.get(device_property, False)
             if prop:
                 properties.append(prop)
         for family in families:
@@ -135,7 +135,7 @@ def device_log(request):
                                    request.META.get('HTTP_USER_AGENT', 'No user agent!')
         )
         print "[%s] \"DEVICE %s\" (%s)" % (today,
-                                            request.device.get('id', 'No id!'),
+                                            device.get('id', 'No id!'),
                                             ", ".join(properties))
 
 
