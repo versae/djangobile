@@ -103,6 +103,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
+    # In order to use device_media_url templatetag in templates.
+    'djangobile',
 )
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -144,7 +146,7 @@ DEVICE_SEARCH_ORDER = (
 # If you set this to True, djangobile will print information about device in
 # each request through standard output. Useful to debug issues.
 # Default: True
-DJANGOBILE_SHOW_LOG = True
+DEVICE_SHOW_LOG = True
 
 # Prefix for "extends" and "include" templatetags device aware.
 # If None, the native templatetags will be overwritten with
@@ -152,6 +154,12 @@ DJANGOBILE_SHOW_LOG = True
 # Default: device.
 # And its use in templates is such as {% device_extends "template.hmtl" %}
 DEVICE_LOADER_TAGS_PREFIX = None
+
+# Prefix for media_url templatetag device aware.
+# If None, the templatetags is named media_url
+# Default: device.
+# And its use in templates is such as {% device_media_url "css/style.css" %}
+DEVICE_MEDIA_URL_TAG_PREFIX = None
 
 #PREFERRED_MARKUP_ORDER = (
 #    'html_web_3_2',
