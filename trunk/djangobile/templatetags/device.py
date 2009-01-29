@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
-from django.template import Node, Library, TemplateSyntaxError
+from os import path
 
-from djangobile.utils import get_device_template_paths
+from django.conf import settings
+from django.template import Node, Library, Variable, TemplateSyntaxError
+
+from djangobile.utils import (get_device_template_paths,
+                              parse_args_kwargs_and_as_var)
 
 register = Library()
 
@@ -17,8 +20,9 @@ else:
 
 
 class DeviceMediaUrlNode(Node):
-    def __init__(self, file_path=None):
+    def __init__(self, file_path=None, force_detection=False):
         self.file_path = file_path
+        self.force_detection = force_detection
 
     def render(self, context):
         device = context.get('device', None)
@@ -28,15 +32,20 @@ class DeviceMediaUrlNode(Node):
             media_url = context.get('MEDIA_URL', None)
         if device:
             media_paths = get_device_template_paths(device, self.file_path)
+            if self.force_detection:
+                for media_path in media_paths:
+                    media_path_split = media_path.split("/")
+                    aboslute_media_path = path.join(settings.MEDIA_ROOT,
+                                                    *media_path_split)
+                    if path.isfile(aboslute_media_path):
+                        return "%s%s" % (media_url, media_path)
             load_name = self.source[0].loadname
             if '/' in load_name:
                 device_criteria = load_name.split('/')[0]
                 media_path = "%s/%s" % (device_criteria, self.file_path)
                 if media_path in media_paths:
                     return "%s%s" % (media_url, media_path)
-            return "%s%s" % (media_url, self.file_path)
-        else:
-            return "%s%s" % (media_url, self.file_path)
+        return "%s%s" % (media_url, self.file_path)
 
 
 class OverrideMediaUrlNode(Node):
@@ -58,20 +67,17 @@ class OverrideMediaUrlNode(Node):
 
 def do_device_media_url(parser, token):
     """
-    Return a aboslute URL for media file in a aware device context.
+    Return a absolute URL for media file in a aware device context.
     If device media URL not exists for that device, MEDIA_URL is inserted.
+    The optional argument force_detection is True if media file exists, in
+    which case it's returned.
 
     Example::
 
         <link rel="stylesheet" type="text/css" href="{% device_media_url "css/style.css" %}" />
     """
-    bits = token.contents.split()
-    if len(bits) != 2:
-        raise TemplateSyntaxError, "%r tag takes one argument: the path to media file" % bits[0]
-    path = bits[1]
-    if path[0] in ('"', "'") and path[-1] == path[0]:
-        return DeviceMediaUrlNode(path[1:-1])
-    return DeviceMediaUrlNode(bits[1])
+    args, kwargs, as_var = parse_args_kwargs_and_as_var(parser, token)
+    return DeviceMediaUrlNode(*args, **kwargs)
 
 
 def do_override_media_url(parser, token):
