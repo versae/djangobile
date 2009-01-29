@@ -5,6 +5,7 @@ from pywurfl import algorithms
 from os import path
 
 from django.conf import settings
+from django.template import TemplateSyntaxError, Variable
 from django.utils.translation import gettext as _
 
 try:
@@ -113,6 +114,55 @@ def get_device_families(device):
         device_dic['pda_device'] = ((not device_dic['pc_device']) and
                                     ('windows mobile' in device_user_agent))
     return device_dic
+
+
+def parse_args_kwargs_and_as_var(parser, token):
+    """
+    Parse uniformly args and kwargs from a templatetag
+
+    Taken from cmsutils: https://tracpub.yaco.es/cmsutils/browser/branches/change_media_directory/tag_utils.py
+
+    Usage::
+
+      For parsing a template like this:
+
+      {% footag my_contents, height=10, zoom=20 as myvar %}
+
+      You simply do this:
+
+      @register.tag
+      def footag(parser, token):
+          args, kwargs, as_var = parse_args_kwargs_and_as_var(parser, token)
+    """
+    bits = token.contents.split(' ')
+
+    if len(bits) <= 1:
+        raise TemplateSyntaxError("'%s' takes at least one argument" % bits[0])
+
+    args = []
+    kwargs = {}
+    as_var = None
+
+    bits = iter(bits[1:])
+    for bit in bits:
+        if bit == 'as':
+            as_var = bits.next()
+            break
+        else:
+            for arg in bit.split(","):
+                if '=' in arg:
+                    k, v = arg.split('=', 1)
+                    k = k.strip()
+                    try:
+                        kwargs[str(k)] = eval(v, None, None)
+                    except NameError:
+                        kwargs[k] = Variable(v.strip())
+                elif arg:
+                    try:
+                        args.append(eval(arg, None, None))
+                    except NameError:
+                        args.append(Variable(arg.strip()))
+    return args, kwargs, as_var
 
 
 def device_log(request, device):
