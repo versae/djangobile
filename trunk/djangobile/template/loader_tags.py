@@ -5,7 +5,8 @@ from django.template.loader_tags import ExtendsNode, IncludeNode, ConstantInclud
 from django.conf import settings
 
 from djangobile.template.loader import get_template
-from djangobile.utils import get_device_template_paths
+from djangobile.utils import (get_device_template_paths,
+                              parse_args_kwargs_and_as_var)
 
 register = Library()
 
@@ -99,6 +100,8 @@ class DeviceIncludeNode(IncludeNode):
 def do_device_extends(parser, token):
     """
     Signal that this template extends a parent template.
+    Allows an optional auto_detection parameter; if it's False, its behavour is
+    like native extends templatetag.
 
     This tag may be used in two ways: ``{% extends "base" %}`` (with quotes)
     uses the literal value "base" as the name of the parent template to extend,
@@ -106,9 +109,11 @@ def do_device_extends(parser, token):
     name of the parent template to extend (if it evaluates to a string) or as
     the parent tempate itelf (if it evaluates to a Template object).
     """
+    args, kwargs, as_var = parse_args_kwargs_and_as_var(parser, token)
+    auto_detection = kwargs.get('auto_detection', True)
     bits = token.contents.split()
-    if len(bits) != 2:
-        raise TemplateSyntaxError, "'%s' takes one argument" % bits[0]
+    if len(bits) > 3:
+        raise TemplateSyntaxError, "'%s' takes at most two argument" % bits[0]
     parent_name, parent_name_expr = None, None
     if bits[1][0] in ('"', "'") and bits[1][-1] == bits[1][0]:
         parent_name = bits[1][1:-1]
@@ -117,24 +122,37 @@ def do_device_extends(parser, token):
     nodelist = parser.parse()
     if nodelist.get_nodes_by_type(DeviceExtendsNode):
         raise TemplateSyntaxError, "'%s' cannot appear more than once in the same template" % bits[0]
-    return DeviceExtendsNode(nodelist, parent_name, parent_name_expr)
+    if auto_detection:
+        return DeviceExtendsNode(nodelist, parent_name, parent_name_expr)
+    else:
+        return ExtendsNode(nodelist, parent_name, parent_name_expr)
 
 
 def do_device_include(parser, token):
     """
-    Loads a template and renders it with the current context.
+    Load a template and renders it with the current context.
+    Allows an optional auto_detection parameter; if it's False, its behavour is
+    like native extends templatetag.
 
     Example::
 
         {% include "foo/some_include" %}
     """
+    args, kwargs, as_var = parse_args_kwargs_and_as_var(parser, token)
+    auto_detection = kwargs.get('auto_detection', True)
     bits = token.contents.split()
-    if len(bits) != 2:
+    if len(bits) > 3:
         raise TemplateSyntaxError, "%r tag takes one argument: the name of the template to be included" % bits[0]
     path = bits[1]
     if path[0] in ('"', "'") and path[-1] == path[0]:
-        return DeviceConstantIncludeNode(path[1:-1])
-    return DeviceIncludeNode(bits[1])
+        if auto_detection:
+            return DeviceConstantIncludeNode(path[1:-1])
+        else:
+            return ConstantIncludeNode(path[1:-1])
+    if auto_detection:
+        return DeviceIncludeNode(bits[1])
+    else:
+        return IncludeNode(bits[1])
 
 
 register.tag('%sextends' % tag_prefix, do_device_extends)
