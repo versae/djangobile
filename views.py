@@ -10,7 +10,7 @@ def index(request):
                'getFirstName': 'Django Mobile Middleware'}
     l = range(1, 4)
 
-    return render_to_response('test.xml',
+    return render_to_response('test.html',
                               {'profile': profile,
                                'list': l},
                               context_instance=RequestContext(request))
