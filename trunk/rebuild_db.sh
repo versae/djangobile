@@ -14,7 +14,11 @@ if (( $? )) ; then
 fi
 
 echo "Generating wurfl.py"
-python wurfl2python.py wurfl/wurfl.xml -o djangobile/wurfl.py
+xsltproc --stringparam 'file' "wurfl_patch_2.xml" "wurfl/patch_wurfl.xsl" "wurfl/wurfl.xml" > "wurfl/wurfl_tmp.xml"
+xsltproc --stringparam 'file' "wurfl_patch_1.xml" "wurfl/patch_wurfl.xsl" "wurfl/wurfl_tmp.xml" > "wurfl/wurfl_patched.xml"
+xsltproc "wurfl/check_wurfl.xsl" "wurfl/wurfl_patched.xml"
+rm wurfl/wurfl_tmp.xml
+python wurfl2python.py wurfl/wurfl_patched.xml -o djangobile/wurfl.py
 if (( $? )) ; then
   echo "Unable to create wurfl.py."
   exit 1
