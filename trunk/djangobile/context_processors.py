@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
 from django.utils import simplejson
 
 from djangobile.utils import get_device, device_log
