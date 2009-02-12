@@ -3,4 +3,4 @@
 # Apply this file:  svn propset svn:externals -F externals.txt .
 #
 
-transformations https://svn.forge.morfeo-project.org/svn/mymobileweb/trunk/MobilityChannelCodeGenerators/resources/transformations/xsd
+transformations https://svn.forge.morfeo-project.org/svn/mymobileweb/branches/mymw_ve_3_4_0_rev_1/MobilityChannelCodeGenerators/resources/transformations/xsd/
