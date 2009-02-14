@@ -52,9 +52,9 @@ class DeviceExtendsNode(ExtendsNode):
                     source, origin = find_template_source(device_path)
                 except TemplateDoesNotExist:
                     exceptions_list.append(device_path)
-                if source and origin:
+                if source:
                     break
-        if not source or not origin:
+        if not source:
             try:
                 source, origin = find_template_source(parent)
             except TemplateDoesNotExist:
