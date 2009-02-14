@@ -166,8 +166,7 @@ def parse_args_kwargs_and_as_var(parser, token):
 
 
 def device_log(request, device):
-    show_log = (getattr(settings, 'DEBUG', False) and 
-                getattr(settings, 'DEVICE_SHOW_LOG', False))
+    show_log = getattr(settings, 'DEVICE_SHOW_LOG', False)
     if (show_log and hasattr(request, 'device')):
         today = datetime.today().strftime("%d/%b/%Y %H:%M:%S")
         properties = []
