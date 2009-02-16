@@ -6,7 +6,8 @@ from django.conf import settings
 
 from djangobile.template.loader import get_template
 from djangobile.utils import (get_device_template_paths,
-                              parse_args_kwargs_and_as_var)
+                              parse_args_kwargs_and_as_var,
+                              template_log)
 
 register = Library()
 
@@ -53,10 +54,12 @@ class DeviceExtendsNode(ExtendsNode):
                 except TemplateDoesNotExist:
                     exceptions_list.append(device_path)
                 if source:
+                    template_log(device_path, log="extends")
                     break
         if not source:
             try:
                 source, origin = find_template_source(parent)
+                template_log(parent, log="extends")
             except TemplateDoesNotExist:
                 exceptions_list.append(parent)
                 raise TemplateSyntaxError, "Template (%s) cannot be extended, because it doesn't exist" % ", ".join(exceptions_list)
@@ -70,7 +73,7 @@ class DeviceConstantIncludeNode(ConstantIncludeNode):
     def render(self, context):
         device = context.get('device', None)
         try:
-            t = get_template(self.template_path, device)
+            t = get_template(self.template_path, device, log="include")
             self.template = t
         except:
             if settings.TEMPLATE_DEBUG:
@@ -87,7 +90,7 @@ class DeviceIncludeNode(IncludeNode):
         device = context.get('device', None)
         try:
             template_name = self.template_name.resolve(context)
-            t = get_template(template_name, device)
+            t = get_template(template_name, device, log="include")
             return t.render(context)
         except TemplateSyntaxError, e:
             if settings.TEMPLATE_DEBUG:

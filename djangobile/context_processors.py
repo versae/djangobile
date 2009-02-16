@@ -15,22 +15,25 @@ def mobile(request):
                                      'DEFAULT_USER_AGENT',
                                      "Mozilla/5.0 (X11; U; Linux armv61; en-US; rv:1.9.1b2pre) Gecko/20081015 Fennec/1.0a1")
     user_agent = request.META.get('HTTP_USER_AGENT', default_user_agent)
-    if hasattr(request, 'device'):
+    if getattr(settings, 'DEBUG', False) and hasattr(request, 'device'):
         device = request.device
-        if device.get('user_agent', False) != user_agent:
+        if getattr(device, 'user_agent', False) != user_agent:
             device = get_device(user_agent)
-            request.session['device'] = device
+            request.session['device_id'] = device.id
         device_log(request, device)
-    elif request.session.test_cookie_worked():
+        return {'device': device}
+    if request.session.test_cookie_worked():
         request.session.delete_test_cookie()
-        device = request.session.get('device', False)
-        if not device:
+        device_id = request.session.get('device_id', False)
+        if not device_id:
             device = get_device(user_agent)
-            request.session['device'] = device
+            request.session['device_id'] = device.id
             device_log(request, device)
+        else:
+            device = get_device(device_id=device_id)
     else:
         device = get_device(user_agent)
-        request.session['device'] = device
+        request.session['device_id'] = device.id
         device_log(request, device)
     request.session.set_test_cookie()
     return {'device': device}
