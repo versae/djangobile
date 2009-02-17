@@ -70,11 +70,11 @@ def render_to_string(template_name, dictionary=None, context_instance=None, \
     else:
         return rendered_template
 
-def select_template(template_name_list, device=None):
+def select_template(template_name_list, device=None, log=None):
     "Given a list of template names, returns the first that can be loaded."
     for template_name in template_name_list:
         try:
-            return get_template(template_name, device)
+            return get_template(template_name, device, log)
         except TemplateDoesNotExist:
             continue
     # If we get here, none of the templates could be loaded
