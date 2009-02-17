@@ -36,14 +36,13 @@ class Library(DjangoLibrary):
                     if not getattr(self, 'nodelist', False):
                         from djangobile.template.loader import get_template, select_template
                         device = getattr(context.get('request', None), 'device', None)
+                        kwargs = {'log': "inclusion_tag"}
                         if device:
-                            args = (file_name, device)
-                        else:
-                            args = (file_name, )
+                            kwargs.update({'device': device})
                         if not isinstance(file_name, basestring) and is_iterable(file_name):
-                            t = select_template(*args)
+                            t = select_template(file_name, **kwargs)
                         else:
-                            t = get_template(*args)
+                            t = get_template(file_name, **kwargs)
                         self.nodelist = t.nodelist
                     return self.nodelist.render(context_class(dict,
                             autoescape=context.autoescape))
