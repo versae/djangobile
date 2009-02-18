@@ -9,15 +9,12 @@ def mobile(request):
     if crash_if_not_user_agent:
         default_user_agent = None
     else:
-        # Report Fennec user agent in order to no crash djangobile when client
-        # browser has no user agent string.
-        default_user_agent = getattr(settings,
-                                     'DEFAULT_USER_AGENT',
-                                     "Mozilla/5.0 (X11; U; Linux armv61; en-US; rv:1.9.1b2pre) Gecko/20081015 Fennec/1.0a1")
+        default_user_agent = getattr(settings, 'DEFAULT_USER_AGENT', '')
     user_agent = request.META.get('HTTP_USER_AGENT', default_user_agent)
-    if getattr(settings, 'DEBUG', False) and hasattr(request, 'device'):
+    if hasattr(request, 'device'):
         device = request.device
-        if getattr(device, 'user_agent', False) != user_agent:
+        if (getattr(settings, 'DEBUG', False) and
+            getattr(device, 'user_agent', False) != user_agent):
             device = get_device(user_agent)
             request.session['device_id'] = device.id
         device_log(request, device)
