@@ -36,6 +36,11 @@ def get_device(user_agent=None, device_id=None):
         device = devices.select_id('generic', instance=True)
     setattr(device, 'user_agent', device.devua)
     setattr(device, 'id', device.devid)
+    
+    if getattr(settings, 'QUERY_LANGUAGE_SUPPORT', False):
+        from pywurfl.ql import QL
+        query = QL(devices)
+        setattr(device, 'query', query)
     device_families = get_device_families(device)
     setattr(device, 'family', device_families)
     return device
@@ -80,33 +85,24 @@ def get_device_template_paths(device, template_name):
 
 
 def get_device_families(device):
-    device_dic = {}
+    family_dic = {}
     try:
-        from pywurfl.ql import QL, QueryLanguageError
-        try:
-            from extra_families import families
-        except ImportError:
-            from djangobile import families
-        query_devices = QL(devices)
-        for (family, query) in families.items():
-            if callable(query):
-                device_dic[family] = bool(query(device))
-            else:
-                ql = """select id where %s""" % query
-                device_dic[family] = False
-                for device_id in query_devices(ql):
-                    if device.devid == device_id:
-                        device_dic[family] = True
-                        break;
+        from extra_families import families
     except ImportError:
-        device_user_agent = device.devua.lower()
-        device_dic['pc_device'] = (('firefox' in device_user_agent) or
-                                   ('explorer' in device_user_agent) or
-                                   ('opera' in device_user_agent) or
-                                   ('safari' in device_user_agent))
-        device_dic['pda_device'] = ((not device_dic['pc_device']) and
-                                    ('windows mobile' in device_user_agent))
-    return device_dic
+        from djangobile import families
+    for (family, query) in families.items():
+        if callable(query):
+            family_dic[family] = bool(query(device))
+        elif hasattr(device, 'query'):
+            ql = """select id where %s""" % query
+            family_dic[family] = False
+            for device_id in devices.query(ql):
+                if device.id == device_id:
+                    family_dic[family] = True
+                    break;
+        else:
+            family_dic[family] = False
+    return family_dic
 
 
 def parse_args_kwargs_and_as_var(parser, token):
