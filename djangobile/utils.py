@@ -36,11 +36,14 @@ def get_device(user_agent=None, device_id=None):
         device = devices.select_id('generic', instance=True)
     setattr(device, 'user_agent', device.devua)
     setattr(device, 'id', device.devid)
-    
     if getattr(settings, 'QUERY_LANGUAGE_SUPPORT', False):
         from pywurfl.ql import QL
-        query = QL(devices)
-        setattr(device, 'query', query)
+        device_query = getattr(device, 'query', None)
+        if not callable(device_query):
+            query = getattr(devices, 'query', None)
+            if not query:
+                query = QL(devices)
+            setattr(device, 'query', query)
     device_families = get_device_families(device)
     setattr(device, 'family', device_families)
     return device
