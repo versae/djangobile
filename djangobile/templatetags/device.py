@@ -25,13 +25,17 @@ class DeviceMediaUrlNode(Node):
         self.force_detection = force_detection
 
     def render(self, context):
+        if isinstance(self.file_path, Variable):
+            file_path = self.file_path.resolve(context)
+        else:
+            file_path = self.file_path
         device = context.get('device', None)
         if '__MEDIA_URL' in context:
             media_url = context.get('__MEDIA_URL', None)
         else:
             media_url = context.get('MEDIA_URL', None)
         if device:
-            media_paths = get_device_template_paths(device, self.file_path)
+            media_paths = get_device_template_paths(device, file_path)
             if self.force_detection:
                 for media_path in media_paths:
                     media_path_split = media_path.split("/")
@@ -42,10 +46,10 @@ class DeviceMediaUrlNode(Node):
             load_name = self.source[0].loadname
             if '/' in load_name:
                 device_criteria = load_name.split('/')[0]
-                media_path = "%s/%s" % (device_criteria, self.file_path)
+                media_path = "%s/%s" % (device_criteria, file_path)
                 if media_path in media_paths:
                     return "%s%s" % (media_url, media_path)
-        return "%s%s" % (media_url, self.file_path)
+        return "%s%s" % (media_url, file_path)
 
 
 class OverrideMediaUrlNode(Node):

@@ -49,7 +49,7 @@ def get_device(user_agent=None, device_id=None):
     return device
 
 
-def get_device_template_paths(device, template_name):
+def get_device_directories(device):
     device_properties = ['id', 'user_agent', 'fall_back', 'preferred_markup',
                          'model_name', 'brand_name', 'family']
     device_path_list = []
@@ -60,30 +60,36 @@ def get_device_template_paths(device, template_name):
                     for family in getattr(device, device_property):
                         device_family = device.family.get(family, False)
                         if device_family:
-                            device_path = path.join(family, template_name)
-                            device_path_list.append(device_path)
+                            device_path_list.append(device_family)
                 else:
-                    device_path = path.join(getattr(device, device_property), template_name)
+                    device_path = getattr(device, device_property)
                     device_path_list.append(device_path)
-                    device_property_lower = getattr(device, device_property).lower()
-                    if device_property_lower != getattr(device, device_property):
-                        device_path = path.join(device_property_lower, template_name)
-                        device_path_list.append(device_path)
+                    device_path_lower = device_path.lower()
+                    if device_path_lower != device_path:
+                        device_path_list.append(device_path_lower)
                 device_properties.remove(device_property)
     for device_property in device_properties:
         if device_property == 'family':
             for family in getattr(device, device_property):
                 device_family = device.family.get(family, False)
                 if device_family:
-                    device_path = path.join(family, template_name)
-                    device_path_list.append(device_path)
+                    device_path_list.append(family)
             break;
-        device_path = path.join(getattr(device, device_property), template_name)
+        device_path = getattr(device, device_property)
         device_path_list.append(device_path)
-        device_property_lower = getattr(device, device_property).lower()
-        if device_property_lower != getattr(device, device_property):
-            device_path = path.join(device_property_lower, template_name)
-            device_path_list.append(device_path)
+        device_path_lower = device_path.lower()
+        if device_path_lower != device_path:
+            device_path_list.append(device_path_lower)
+
+    return device_path_list
+
+
+def get_device_template_paths(device, template_name):
+    device_path_directories = get_device_directories(device)
+    device_path_list = []
+    for directory in device_path_directories:
+        device_path_list.append(path.join(directory, template_name))
+
     return device_path_list
 
 
