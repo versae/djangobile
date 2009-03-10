@@ -2,13 +2,13 @@
 == Dependencies == 
 === Required === 
 
-    * PyWURFL (pywurfl-6.4.0b). A Python language package that makes dealing with the WURFL in Python a little easier. Special thanks for Armand Lynch for his patience. 
+    * [http://celljam.net/#processor PyWURFL] ([http://celljam.net/downloads/pywurfl/pywurfl-6.4.0b.tar.gz pywurfl-6.4.0b]). A Python language package that makes dealing with the WURFL in Python a little easier. Special thanks for Armand Lynch for his patience.
 
 === Optional ===
 
-    * Levenshtein Module (python-Levenshtein-0.10.1). Required if you want to use the Levenshtein distance or Jaro-Winkler algorithms for user agent similarity.
-    * lxml (lxml-2.1beta3.tar.gz). Required in order to validate IDEAL XML templates against MyMobileWeb?'s IDEAL DTD scheme for presentations.
-    * pyparsing (pyparsing-1.5.1.tar.gz). Required if you want to use the PyWURFL query language for create devices families. 
+    * [http://celljam.net/downloads/pywurfl/python-Levenshtein-0.10.1.tar.gz Levenshtein Module] ([http://celljam.net/downloads/pywurfl/python-Levenshtein-0.10.1.tar.gz python-Levenshtein-0.10.1]). Required if you want to use the Levenshtein distance or Jaro-Winkler algorithms for user agent similarity. 
+    * [http://codespeak.net/lxml/ lxml] ([http://pypi.python.org/packages/source/l/lxml/lxml-2.1beta3.tar.gz#md5=1991c88415dde06a52db91d494ba680d lxml-2.1beta3.tar.gz]). Required in order to validate IDEAL XML templates against MyMobileWeb's IDEAL DTD scheme for presentations.
+    * [http://pyparsing.wikispaces.com/ pyparsing] ([http://downloads.sourceforge.net/pyparsing/pyparsing-1.5.1.tar.gz?modtime=1224282264&big_mirror=0 pyparsing-1.5.1.tar.gz]). Required if you want to use the PyWURFL query language for create devices families. 
 
 == Instalation == 
 
