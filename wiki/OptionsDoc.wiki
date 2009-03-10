@@ -99,7 +99,7 @@ def xhtml_mp_device(device):
             (device.preferred_markup == 'html_wi_w3_xhtmlbasic' and 
              device.html_wi_oma_xhtmlmp_1_0 == True))
 
-# This syntax requires pyparsing module
+# The next syntax requires pyparsing module
 families['morethan15columns_device'] = """columns >= 15"""
 }}}
 
@@ -121,6 +121,7 @@ DEVICE_LOADER_TAGS_PREFIX = 'device'
 == Prefix of device_media_url tag ==
 
 By default its value is 'device', being the templatetag "device_media_url".
+
 {{{
 # Prefix for media_url templatetag device aware.
 # If None, the templatetags is named media_url
