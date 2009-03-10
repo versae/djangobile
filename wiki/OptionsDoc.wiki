@@ -85,6 +85,11 @@ devices.add(parent='generic',
             actual_device_root=True)
 }}}
 
+There are several optional parameters you can find in [http://celljam.net/ PyWURFL Site]. You must always specify:
+  * parent: It is the parent class the new device extends.
+  * devid: A string to name the device.
+  * devua: The user agent string of the device. 
+
 == Devices families definition ==
 
 One definition of family is a set of capabilities that aims to provide designated fine-grained control over the identification devices. In order to define new families, a file extra_families.py can be created in the project root. The device definition uses PyWURFL !QueryLanguage (setting QUERY_LANGUAGE_SUPPORT to True in settings.py) or native Python (over Device object) syntax.
@@ -158,4 +163,3 @@ Djangobile expects to find that parameter into a GET request so, with the
 default configuration, adding `?device_detection=false` will do the trick.
 
 `http://your.djangobile.powered.site?device_detection=false`
-
