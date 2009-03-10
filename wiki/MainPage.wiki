@@ -1,6 +1,6 @@
 Djangobile is a django mobile extension for rendering web pages according to device capabilities. Therefore djangobile offers an implementation for W3C Working Draft IDEAL (Interface DEscription Authoring Language). 
 
-Note: This software is under hard development.
+*Note:* This software is under hard development.
 
 [DependenciesAndInstalation Dependencies and Instalation]
 
