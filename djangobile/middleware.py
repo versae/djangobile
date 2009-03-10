@@ -10,7 +10,7 @@ class DjangoMobileMiddleware(object):
         is_media_request = (full_path.startswith(settings.MEDIA_URL) and
                             full_path.startswith(settings.ADMIN_MEDIA_PREFIX))
         if not hasattr(request, 'device') and not is_media_request:
-            device = mobile(request)['device']
+            device = getattr(mobile(request), 'device', None)
             setattr(request, 'device', device)
         return None
 
