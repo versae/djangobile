@@ -5,6 +5,13 @@ from django.utils import simplejson
 from djangobile.utils import get_device, device_log
 
 def mobile(request):
+    device_detection = getattr(settings, 'DEVICE_DETECTION_VARIABLE', 'device_detection')
+    if device_detection not in request.session:
+        request.session[device_detection] = True
+    elif device_detection in request.GET:
+        if request.GET[device_detection].lower() == 'false':
+            return {}
+
     crash_if_not_user_agent = getattr(settings, 'CRASH_IF_NOT_USER_AGENT', False)
     if crash_if_not_user_agent:
         default_user_agent = None
