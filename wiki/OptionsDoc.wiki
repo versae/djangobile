@@ -121,8 +121,9 @@ DEVICE_LOADER_TAGS_PREFIX = 'device'
 == Prefix of device_media_url tag ==
 
 By default its value is 'device', being the templatetag "device_media_url". # Prefix for media_url templatetag device aware. # If None, the templatetags is named media_url # Default: device. # And its use in templates is such as {% device_media_url "css/style.css" %}
-
-`DEVICE_MEDIA_URL_TAG_PREFIX = None`
+{{{
+DEVICE_MEDIA_URL_TAG_PREFIX = None
+}}}
 
 == Show device log ==
 
