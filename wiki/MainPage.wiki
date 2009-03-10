@@ -2,8 +2,8 @@ Djangobile is a django mobile extension for rendering web pages according to dev
 
 Note: This software is under hard development.
 
-[WikiSyntax Dependencies and Instalation]
+[DependenciesAndInstalation Dependencies and Instalation]
 
-[WikiSyntax Adding djangobile to your project]
+[EnableDjangobile Adding djangobile to your project]
 
-[WikiSyntax Options]
+[OptionsDoc Options]
