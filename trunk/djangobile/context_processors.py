@@ -10,8 +10,11 @@ def mobile(request):
         request.session[device_detection] = True
     elif device_detection in request.GET:
         if request.GET[device_detection].lower() == 'false':
-            return {}
-
+            request.session[device_detection] = False
+        else:
+            request.session[device_detection] = True
+    if not request.session[device_detection]:
+        return {}
     crash_if_not_user_agent = getattr(settings, 'CRASH_IF_NOT_USER_AGENT', False)
     if crash_if_not_user_agent:
         default_user_agent = None
