@@ -60,7 +60,7 @@ def get_device_directories(device):
                     for family in getattr(device, device_property):
                         device_family = device.family.get(family, False)
                         if device_family:
-                            device_path_list.append(device_family)
+                            device_path_list.append(family)
                 else:
                     device_path = getattr(device, device_property)
                     device_path_list.append(device_path)
