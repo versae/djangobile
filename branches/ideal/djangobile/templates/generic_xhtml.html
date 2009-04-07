@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>{{ title }}</title>
+    {% for style_sheet in style_sheets %}
+    <link rel="stylesheet" href="{{ style_sheet }}" type="text/css" />
+    {% endfor %}
+    {% if icon %}
+    <link rel="icon" href="{{ icon }}" type="image/x-icon" />
+    {% endif %}
+    {% if shortcut_icon %}
+    <link rel="shortcut icon" href="{{ shortcut_icon }}" type="image/x-icon" />
+    {% endif %}
+    {% for link in rel_links %}
+    <link rel="{{ link.rel }}" href="{{ link.href }}" {% if link.title %}title="{{ link.title }}"{% endif %} {% if link.type %}title="{{ link.type }}"{% endif %} />
+    {% endfor %}
+    {% if style %}
+    <style type="text/css">
+    {{ style }}
+    </style>
+    {% endif %}
+    {% if script %}
+    <script type="text/javascript" language="javascript">
+    {{ script }}
+    </script>
+    {% endif %}
+</head>
+{% autoescape off %}
+{{ body }}
+{% endautoescape %}
+</html>
