@@ -46,6 +46,8 @@ def get_device(user_agent=None, device_id=None):
             setattr(device, 'query', query)
     device_families = get_device_families(device)
     setattr(device, 'family', device_families)
+    setattr(device, 'belons_to',
+            lambda family: device.family.get(family, False))
     return device
 
 
