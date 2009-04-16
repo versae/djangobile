@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+from django.utils.datastructures import SortedDict
 
 
 class FamiliesException(Exception):
     pass
 
 
-class Families(dict):
+class Families(SortedDict):
     def add(self, func):
         if callable(func):
             self.update({func.func_name: func})
@@ -16,17 +17,6 @@ class Families(dict):
 
 families = Families()
 
-
-@families.add
-def pc_device(device):
-    return (device.preferred_markup == 'html_web_4_0' and
-            device.is_wireless_device == False) 
-
-@families.add
-def pda_device(device):
-    return (device.preferred_markup == 'html_web_3_2' and
-            device.rows > 8 and device.rows < 15 and device.columns < 40 and
-            device.is_wireless_device == True)
 
 @families.add
 def wap_device(device):
@@ -49,3 +39,14 @@ def xhtml_mp_device(device):
     return (device.preferred_markup == 'html_wi_oma_xhtmlmp_1_0' or
             (device.preferred_markup == 'html_wi_w3_xhtmlbasic' and 
              device.html_wi_oma_xhtmlmp_1_0 == True))
+
+@families.add
+def pda_device(device):
+    return (device.preferred_markup == 'html_web_3_2' and
+            device.rows > 8 and device.rows < 15 and device.columns < 40 and
+            device.is_wireless_device == True)
+
+@families.add
+def pc_device(device):
+    return (device.preferred_markup == 'html_web_4_0' and
+            device.is_wireless_device == False)
