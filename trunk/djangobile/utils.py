@@ -6,6 +6,7 @@ from os import path
 
 from django.conf import settings
 from django.template import TemplateSyntaxError, Variable
+from django.utils.datastructures import SortedDict
 
 try:
     from extra_devices import devices
@@ -96,7 +97,7 @@ def get_device_template_paths(device, template_name):
 
 
 def get_device_families(device):
-    family_dic = {}
+    family_dic = SortedDict()
     try:
         from extra_families import families
     except ImportError:
