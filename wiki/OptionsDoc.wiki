@@ -162,4 +162,6 @@ DEVICE_DETECTION_VARIABLE = 'device_detection'
 Djangobile expects to find that parameter into a GET request so, with the
 default configuration, adding `?device_detection=false` will do the trick.
 
-`http://your.djangobile.powered.site?device_detection=false`
+{{{
+http://your.djangobile.powered.site?device_detection=false
+}}}
