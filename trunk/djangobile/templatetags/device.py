@@ -19,6 +19,10 @@ else:
     tag_prefix = 'device_'
 
 
+#################
+# Template tags #
+#################
+
 class DeviceMediaUrlNode(Node):
     def __init__(self, file_path=None, force_detection=False):
         self.file_path = file_path
@@ -100,3 +104,17 @@ def do_override_media_url(parser, token):
 
 register.tag('%smedia_url' % tag_prefix, do_device_media_url)
 register.tag('override_media_url', do_override_media_url)
+
+
+###########
+# Filters #
+###########
+
+def belongs_to(device, family):
+    import ipdb; ipdb.set_trace()
+    if callable(getattr(device, 'belongs_to', None)):
+        return device.belongs_to(family)
+    else:
+        return False
+
+register.filter('belongs_to', belongs_to)
