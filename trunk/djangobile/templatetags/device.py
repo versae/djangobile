@@ -111,7 +111,6 @@ register.tag('override_media_url', do_override_media_url)
 ###########
 
 def belongs_to(device, family):
-    import ipdb; ipdb.set_trace()
     if callable(getattr(device, 'belongs_to', None)):
         return device.belongs_to(family)
     else:
