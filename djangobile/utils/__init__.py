@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+import os
+
 from datetime import datetime
 from mimetypes import guess_type
 from pywurfl import algorithms
-from os import path
 
 from django.conf import settings
 from django.template import TemplateSyntaxError, Variable
@@ -62,26 +63,28 @@ def get_device_directories(device):
                 if device_property == 'family':
                     for family in getattr(device, device_property):
                         device_family = device.family.get(family, False)
-                        if device_family:
+                        if device_family and family:
                             device_path_list.append(family)
                 else:
                     device_path = getattr(device, device_property)
-                    device_path_list.append(device_path)
+                    if device_path:
+                        device_path_list.append(device_path)
                     device_path_lower = device_path.lower()
-                    if device_path_lower != device_path:
+                    if device_path_lower != device_path and device_path_lower:
                         device_path_list.append(device_path_lower)
                 device_properties.remove(device_property)
     for device_property in device_properties:
         if device_property == 'family':
             for family in getattr(device, device_property):
                 device_family = device.family.get(family, False)
-                if device_family:
+                if device_family and family:
                     device_path_list.append(family)
             break;
         device_path = getattr(device, device_property)
-        device_path_list.append(device_path)
+        if device_path:
+            device_path_list.append(device_path)
         device_path_lower = device_path.lower()
-        if device_path_lower != device_path:
+        if device_path_lower != device_path and device_path_lower:
             device_path_list.append(device_path_lower)
 
     return device_path_list
@@ -91,7 +94,7 @@ def get_device_template_paths(device, template_name):
     device_path_directories = get_device_directories(device)
     device_path_list = []
     for directory in device_path_directories:
-        device_path_list.append(path.join(directory, template_name))
+        device_path_list.append(os.path.join(directory, template_name))
 
     return device_path_list
 
@@ -202,7 +205,7 @@ def is_ideal_template(rendered_template, template_name=None):
     if hasattr(settings, 'IDEAL_XML_SCHEMA_FILE'):
         xsd_file = open(settings.IDEAL_XML_SCHEMA_FILE)
     else:
-        xsd_file = open(path.join('djangobile', 'transformations', 'cmt.xsd'))
+        xsd_file = open(os.path.join('djangobile', 'transformations', 'cmt.xsd'))
     try:
         import lxml.etree as etree
         from StringIO import StringIO
