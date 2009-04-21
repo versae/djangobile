@@ -17,7 +17,7 @@ def add_device_locale(device=None):
 
     from django.conf import settings
 
-    if not device and not settings.USE_I18N:
+    if not device or not settings.USE_I18N:
         return
 
     current_translation = trans._active[currentThread()]
