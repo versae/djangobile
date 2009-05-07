@@ -1,4 +1,3 @@
-#labels Featured
 Just set a new context processor in your project settings.py
 
 {{{
