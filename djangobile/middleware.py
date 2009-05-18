@@ -8,7 +8,7 @@ from djangobile.utils import translation
 class DevicesMiddleware(object):
     def process_request(self, request):
         full_path = request.get_full_path()
-        is_media_request = (full_path.startswith(settings.MEDIA_URL) and
+        is_media_request = (full_path.startswith(settings.MEDIA_URL) or
                             full_path.startswith(settings.ADMIN_MEDIA_PREFIX))
         device = getattr(request, 'device', None)
         if not device and not is_media_request:
