@@ -37,7 +37,9 @@ def get_device(user_agent=None, device_id=None):
     except algorithms.DeviceNotFound:
         device = devices.select_id('generic', instance=True)
     setattr(device, 'user_agent', device.devua)
+    setattr(device, 'real_user_agent', user_agent)
     setattr(device, 'id', device.devid)
+    setattr(device, 'real_id', device_id)
     if getattr(settings, 'QUERY_LANGUAGE_SUPPORT', False):
         from pywurfl.ql import QL
         device_query = getattr(device, 'query', None)
