@@ -3,7 +3,115 @@
 <wurfl_patch>
 	<devices>
 	
-	    <!-- Put your own redefinition code -->
 	    
+				<device fall_back="root" id="generic" user_agent="">
+					<group id="bugs">
+						<capability name="supports_data_object_from_servlet" value="true"/>
+					</group>
+				</device>
+
+	    <!-- Put your own redefinition code -->
+	    <device user_agent="BlackBerry/4.0" fall_back="blackberry_generic_ver3_sub70" id="blackberry_generic_ver4">
+	   <!--  <device user_agent="BlackBerry7100/4.0.0 Profile/MIDP-2.0 Configuration/CLDC-1.1" fall_back="blackberry7100_ver1_sub400" id="blackberry7100_ver1_sub400midp"> -->
+	   		<group id="xhtml_ui">
+                	<capability name="xhtmlmp_preferred_mime_type" value="application/xhtml+xml"/>
+            </group>
+            <group id="image_format">
+                	<capability name="svgt_1_1" value="true"/>
+        	</group>
+			<group id="bugs">
+						<capability name="supports_data_object_from_servlet" value="false"/>
+			</group>
+	    </device>
+
+	    	<device user_agent="Mozilla/5.0 (Windows; U; Windows NT 5.1; es-ES) AppleWebKit/523.15 (KHTML, like Gecko) Safari" fall_back="generic_firefox" id="firefox1_nt51_enus">
+				<group id="image_format">
+                	<capability name="svgt_1_1" value="true"/>
+        	</group>
+		</device>
+
+		<device user_agent="Mozilla/4.0 (compatible; MSIE 6.0; Windows CE; PPC; 480x640) Opera 8.65 [en]" fall_back="msie6_nt51" id="msie6_nt51_net_865">
+				<group id="image_format">
+                	<capability name="svgt_1_1" value="true"/>
+        	</group>
+        		</device>
+
+		<device user_agent="Mozilla/5.0 (SymbianOS/9.1; U; en-us) AppleWebKit/413 (KHTML, like Gecko) Safari/413" fall_back="nokia_e61_ver1" id="nokia_e61_ver1_submozilla50">
+			<group id="image_format">
+                	<capability name="svgt_1_1" value="true"/>
+        	</group>
+		</device>
+
+		<device user_agent="Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.7.5) Gecko/20041107 Firefox/1.0" fall_back="generic_firefox" id="firefox1_nt5_enus">
+			<group id="image_format">
+                	<capability name="svgt_1_1" value="true"/>
+        	</group>
+		</device>
+
+			<device user_agent="Mozilla/4.08 (PDA; NF33PPC3AR/1.0)NetFront/3.3" fall_back="ms_mobile_browser_ver1_subceppc240320" id="pda_Netfront">
+				<group id="image_format">
+                	<capability name="svgt_1_1" value="true"/>
+				</group>
+				<group id="browser">
+					<capability name="javascript_support" value="true" />
+					<capability name="external_script_support" value="true" />
+				</group>
+        	</device>
+
+			<!-- Opera mobile .Nokia E61-->
+				<device user_agent="Mozilla/5.0 (SymbianOS/9.1; U; en-us) AppleWebKit/413 (KHTML, like Gecko) Safari/413" fall_back="nokia_e61_ver1" id="nokia_e61_ver1_submozilla50">
+					<group id="image_format">
+                		<capability name="svgt_1_1" value="true"/>
+					</group>
+					<group id="markup">
+						<capability name="preferred_markup" value="html_web_3_2"/>
+						<capability name="html_web_4_0" value="true"/>
+					</group>
+					<group id="bugs">
+						<capability name="supports_data_object_from_servlet" value="false"/>
+					</group>
+				</device>
+
+		<device user_agent="NokiaN80-1" actual_device_root="true" fall_back="nokia_generic_series60_dp30" id="nokia_n80_ver1">
+				<group id="bugs">
+						<capability name="supports_data_object_from_servlet" value="false"/>
+				</group>
+		</device>
+
+ 		<device id="demoMTR" user_agent="HPiPAQhw6900/1.0/Mozilla/4.0 (compatible; MSIE 4.01; Windows CE; PPC; 240x240)" fall_back="ms_mobile_browser_ver1_sub240320_PocketPC_50">
+ 		    <group id="display">  			
+				<capability name="resolution_width" value="240"/>
+				<capability name="resolution_height" value="240"/>
+  			</group>
+  			<group id="product_info">
+	 			<capability name="location_provider" value="gps" />	 	
+			</group>                                      
+ 		</device>
+ 		
+ 		<device id="MTRDemoHTC" user_agent="HTC_TyTN_II Mozilla/4.0 (compatible; MSIE 6.0; Windows CE; IEMobile 7.6)" fall_back="ms_mobile_ver6">
+ 			<group id="product_info">
+      			<capability name="brand_name" value="HTC"/>
+      			<capability name="model_name" value="Hermes"/>
+      			<capability name="uaprof" value="http://www.htcmms.com.tw/gen/Hermes-2.0.xml"/>
+      			<capability name="has_pointing_device" value="true"/>
+    		</group>
+    		<group id="display">      			
+      			<capability name="max_image_height" value="300"/>
+      			<capability name="max_image_width" value="228"/>
+      			<capability name="resolution_height" value="320"/>
+      			<capability name="resolution_width" value="240"/>
+      			<capability name="columns" value="34"/>
+				<capability name="rows" value="10"/>
+    		</group>
+    		<group id="markup">
+				<capability name="preferred_markup" value="html_web_3_2"/>
+				<capability name="wml_1_1" value="true"/>
+				<capability name="wml_1_2" value="true"/>
+				<capability name="wml_1_3" value="true"/>
+				<capability name="html_web_3_2" value="true"/>
+				<capability name="html_web_4_0" value="true"/>
+			</group>
+ 		</device>
+ 			    
 	</devices>
 </wurfl_patch>
