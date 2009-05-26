@@ -4,7 +4,7 @@ from os import path
 from django.conf import settings
 from django.template import Node, Library, Variable, TemplateSyntaxError
 
-from djangobile.utils import (get_device_template_paths,
+from djangobile.utils import (get_device_template_paths, get_device_directories,
                               parse_args_kwargs_and_as_var)
 
 register = Library()
@@ -24,9 +24,8 @@ else:
 #################
 
 class DeviceMediaUrlNode(Node):
-    def __init__(self, file_path=None, force_detection=False):
+    def __init__(self, file_path=None):
         self.file_path = file_path
-        self.force_detection = force_detection
 
     def render(self, context):
         if isinstance(self.file_path, Variable):
@@ -40,18 +39,11 @@ class DeviceMediaUrlNode(Node):
             media_url = context.get('MEDIA_URL', None)
         if device:
             media_paths = get_device_template_paths(device, file_path)
-            if self.force_detection:
-                for media_path in media_paths:
-                    media_path_split = media_path.split("/")
-                    aboslute_media_path = path.join(settings.MEDIA_ROOT,
-                                                    *media_path_split)
-                    if path.isfile(aboslute_media_path):
-                        return "%s%s" % (media_url, media_path)
-            load_name = self.source[0].loadname
-            if '/' in load_name:
-                device_criteria = load_name.split('/')[0]
-                media_path = "%s/%s" % (device_criteria, file_path)
-                if media_path in media_paths:
+            for media_path in media_paths:
+                media_path_split = media_path.split("/")
+                aboslute_media_path = path.join(settings.MEDIA_ROOT,
+                                                *media_path_split)
+                if path.isfile(aboslute_media_path):
                     return "%s%s" % (media_url, media_path)
         return "%s%s" % (media_url, file_path)
 
@@ -61,12 +53,10 @@ class OverrideMediaUrlNode(Node):
         device = context.get('device', None)
         media_url = context.get('MEDIA_URL', None)
         if device:
-            media_paths = get_device_template_paths(device, '')
-            load_name = self.source[0].loadname
-            if '/' in load_name:
-                device_criteria = load_name.split('/')[0]
-                media_path = "%s/" % (device_criteria)
-                if media_path in media_paths:
+            media_paths = get_device_directories(device)
+            for media_path in media_paths:
+                aboslute_media_path = path.join(settings.MEDIA_ROOT, media_path)
+                if path.isdir(aboslute_media_path):
                     if not '__MEDIA_URL' in context:
                         context['__MEDIA_URL'] = context['MEDIA_URL']
                     context['MEDIA_URL'] = "%s%s" % (media_url, media_path)
@@ -77,8 +67,6 @@ def do_device_media_url(parser, token):
     """
     Return a absolute URL for media file in a aware device context.
     If device media URL not exists for that device, MEDIA_URL is inserted.
-    The optional argument force_detection is True if media file exists, in
-    which case it's returned.
 
     Example::
 
