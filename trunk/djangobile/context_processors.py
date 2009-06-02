@@ -37,7 +37,7 @@ def mobile(request):
             request.session['device_id'] = device.id
             device_log(request, device)
         else:
-            device = get_device(device_id=device_id)
+            device = get_device(device_id=device_id, user_agent=user_agent)
     else:
         device = get_device(user_agent)
         request.session['device_id'] = device.id

@@ -16,8 +16,13 @@ except ImportError:
 
 
 def get_device(user_agent=None, device_id=None):
-    assert(((user_agent and not device_id) or (not user_agent and device_id)),
-            'User_agent or device_id must be passed, but not both.')
+    """ 
+    Get device according to device_id or user_agent if device_id if not
+    provided.
+    The device detection doesn't works properly sometimes, then the user_agent
+    is added to Device object as real_user_agent attribute, and device_id as
+    real_id attribute.
+    """
     if hasattr(settings, 'USER_AGENT_SEARCH_ALGORITHM'):
         if settings.USER_AGENT_SEARCH_ALGORITHM == 'JaroWinkler':
             kwaccuracy = {'accuracy': getattr(settings, 'JARO_WINKLER_ACCURACY', 0.9)}
@@ -29,11 +34,11 @@ def get_device(user_agent=None, device_id=None):
     else:
         search_algorithm = algorithms.Tokenizer()
     try:
-        if user_agent:
+        if device_id:
+            device = devices.select_id(device_id, instance=True)
+        else:
             device = devices.select_ua(user_agent, filter_noise=True,
                                        search=search_algorithm, instance=True)
-        else:
-            device = devices.select_id(device_id, instance=True)
     except algorithms.DeviceNotFound:
         device = devices.select_id('generic', instance=True)
     setattr(device, 'user_agent', device.devua)
